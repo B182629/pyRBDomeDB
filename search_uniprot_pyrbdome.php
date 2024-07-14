@@ -23,85 +23,276 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
 
     <title>Search UniProt ID</title>
+
+    <style>
+
+        .search-column {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .filters-column {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .filter-row input {
+            flex: 1;
+            margin-right: 5px;
+        }
+
+        .filter-row label {
+            flex: 0.5;
+        }
+    </style>
+
+
 </head>
 <body>
     <!-- build layout of website using bootstrap CSS -->
-    <div class="container">
+
+    <div class='container'>
+        <br>
         <div class="row">
-            <h3>Search UniProt IDs</h3>
+            <h3>Filter pyRBDome Results</h3>
         </div>
         <div class="row">
             <p>Search for compounds using their Catalogue Name or Manufacturer. To view more details about a specific compound, click of the 'Catalogue Name' of the compound.</p>
-        </div>          
-        <div class="row">
-            <!-- form for searching compounds using post method -->
-            <form action="" method="POST">
-                <div class="input-group mb-3">
-                    <!-- input field for entering search query using placeholder examples -->
-                    <input type="text" id="search" name="search" class="form-control" placeholder="Search Example: SPH1-002-081, 002, SPH2" required>
-                    <!-- button to submit the search form to server -->
-                    <button type="submit" name="submit" class="btn btn-primary">Search</button>
-                </div>
-            </form>
+        </div>  
+    </div>
+    <div class="container"> 
+        <div class='row'> 
+            <div class="column column-30">
+                <form action="search_uniprot_pyrbdome.php" method="GET">
+
+                    <input type="hidden" id="prediction_min_hidden" name="prediction_min" value="<?php echo htmlspecialchars($_GET['prediction_min'] ?? ''); ?>">
+                    <input type="hidden" id="prediction_max_hidden" name="prediction_max" value="<?php echo htmlspecialchars($_GET['prediction_max'] ?? ''); ?>">
+
+                    <input type="hidden" id="aarna_min_hidden" name="aarna_min" value="<?php echo htmlspecialchars($_GET['aarna_min'] ?? ''); ?>">
+                    <input type="hidden" id="aarna_max_hidden" name="aarna_max" value="<?php echo htmlspecialchars($_GET['aarna_max'] ?? ''); ?>">
+
+                    <input type="hidden" id="pst_prna_min_hidden" name="pst_prna_min" value="<?php echo htmlspecialchars($_GET['pst_prna_min'] ?? ''); ?>">
+                    <input type="hidden" id="pst_prna_max_hidden" name="pst_prna_max" value="<?php echo htmlspecialchars($_GET['pst_prna_max'] ?? ''); ?>">
+
+                    <input type="hidden" id="bindup_min_hidden" name="bindup_min" value="<?php echo htmlspecialchars($_GET['bindup_min'] ?? ''); ?>">
+                    <input type="hidden" id="bindup_max_hidden" name="bindup_max" value="<?php echo htmlspecialchars($_GET['bindup_max'] ?? ''); ?>">
+
+                    <input type="hidden" id="ftmap_min_hidden" name="ftmap_min" value="<?php echo htmlspecialchars($_GET['ftmap_min'] ?? ''); ?>">
+                    <input type="hidden" id="ftmap_max_hidden" name="ftmap_max" value="<?php echo htmlspecialchars($_GET['ftmap_max'] ?? ''); ?>">
+
+                    <input type="hidden" id="rnabindrplus_min_hidden" name="rnabindrplus_min" value="<?php echo htmlspecialchars($_GET['rnabindrplus_min'] ?? ''); ?>">
+                    <input type="hidden" id="rnabindrplus_max_hidden" name="rnabindrplus_max" value="<?php echo htmlspecialchars($_GET['rnabindrplus_max'] ?? ''); ?>">
+                    
+                    <input type="hidden" id="disordpbind_min_hidden" name="disordpbind_min" value="<?php echo htmlspecialchars($_GET['disordpbind_min'] ?? ''); ?>">
+                    <input type="hidden" id="disordpbind_max_hidden" name="disordpbind_max" value="<?php echo htmlspecialchars($_GET['disordpbind_max'] ?? ''); ?>">
+                    
+                    <input type="hidden" id="hydra_min_hidden" name="hydra_min" value="<?php echo htmlspecialchars($_GET['hydra_min'] ?? ''); ?>">
+                    <input type="hidden" id="hydra_max_hidden" name="hydra_max" value="<?php echo htmlspecialchars($_GET['hydra_max'] ?? ''); ?>">
+                    
+                    <label for="uniprot_search">Search UniProt:</label>
+                    <input type="text" id="uniprot_search" name="uniprot_search" placeholder="Enter UniProt ID" value="<?php echo htmlspecialchars($_GET['uniprot_search'] ?? ''); ?>">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <div class="column column-60 column-offset-10">
+                <h4>Filters:</h4>
+                <form action="search_uniprot_pyrbdome.php" method="GET">
+                    <input type="hidden" id="uniprot_search_hidden" name="uniprot_search" value="<?php echo htmlspecialchars($_GET['uniprot_search'] ?? ''); ?>">
+
+                    <div class="filter-row">
+                        <label for="prediction_min">Prediction Score</label>
+                        <input type="text" id="prediction_min" name="prediction_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['prediction_min'] ?? ''); ?>">
+                        <input type="text" id="prediction_max" name="prediction_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['prediction_max'] ?? ''); ?>">
+                    </div>
+                    <div class="filter-row">
+                        <label for="aarna_min">aaRNA</label>
+                        <input type="text" id="aarna_min" name="aarna_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['aarna_min'] ?? ''); ?>">
+                        <input type="text" id="aarna_max" name="aarna_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['aarna_max'] ?? ''); ?>">
+                    </div>
+
+                    <div class="filter-row">
+                        <label for="pst_prna_min">PST_PRNA</label>
+                        <input type="text" id="pst_prna_min" name="pst_prna_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['pst_prna_min'] ?? ''); ?>">
+                        <input type="text" id="pst_prna_max" name="pst_prna_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['pst_prna_max'] ?? ''); ?>">
+                    </div>
+
+                    <!-- Add more filter rows as needed -->
+                    <div class="filter-row">
+                        <label for="bindup_min">BindUP</label>
+                        <input type="text" id="bindup_min" name="bindup_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['bindup_min'] ?? ''); ?>">
+                        <input type="text" id="bindup_max" name="bindup_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['bindup_max'] ?? ''); ?>">
+                    </div>
+
+                    <div class="filter-row">
+                        <label for="ftmap_min">FTMap Distance</label>
+                        <input type="text" id="ftmap_min" name="ftmap_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['ftmap_min'] ?? ''); ?>">
+                        <input type="text" id="ftmap_max" name="ftmap_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['ftmap_max'] ?? ''); ?>">
+                    </div>
+
+                    <div class="filter-row">
+                        <label for="rnabindrplus_min">RNABindRPlus</label>
+                        <input type="text" id="rnabindrplus_min" name="rnabindrplus_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['rnabindrplus_min'] ?? ''); ?>">
+                        <input type="text" id="rnabindrplus_max" name="rnabindrplus_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['rnabindrplus_max'] ?? ''); ?>">
+                    </div>
+
+                    <div class="filter-row">
+                        <label for="disordpbind_min">DisoRDPbind</label>
+                        <input type="text" id="disordpbind_min" name="disordpbind_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['disordpbind_min'] ?? ''); ?>">
+                        <input type="text" id="disordpbind_max" name="disordpbind_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['disordpbind_max'] ?? ''); ?>">
+                    </div>
+
+                    <div class="filter-row">
+                        <label for="hydra_min">HydRa</label>
+                        <input type="text" id="hydra_min" name="hydra_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['hydra_min'] ?? ''); ?>">
+                        <input type="text" id="hydra_max" name="hydra_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['hydra_max'] ?? ''); ?>">
+                    </div>
+
+                    <button type="submit">Filter Results</button>
+                </form>
+            </div>
         </div>
     </div>
 
-
-    <div class="row">
+    <div class="container">
         <table>
             <thead>
                 <tr>
-                    <th>Catalogue Name</th>
-                    <th>Manufacturer</th>
-                    <th>Number of Atoms</th>
+                    <th>UniProt ID</th>
+                    <th>Residue</th>
+                    <th>Amino Acid</th>
+                    <th>Prediction Score</th>
+                    <th>aaRNA</th>
+                    <th>PST PRNA</th>
+                    <th>BindUP</th>
+                    <th>FTMap Distance</th>
+                    <th>RNABindRPlus</th>
+                    <th>DisoRDPbind</th>
+                    <th>HydRa</th>
                 </tr>
             </thead>
             <tbody>
                 <?php 
                 // check if search form is submitted using POST method
-                if(isset($_POST['submit'])) {
+                if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET)) {
                     try {
                         // connect to mysql database using credentials stored in login.php
                         $pdo = new PDO("mysql:host=$hostname;dbname=$database", $username, $password);
                         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                         
-                        $filtervalues = '%' . $_POST['search'] . '%'; // add wildcard before and after search sting to find patial string
                         // construct mysql query based on filter values and prepare query to avoid SQL injection
-                        $query = "SELECT c.id, c.catn, o.name, c.natm FROM Compounds c JOIN Manufacturers o ON c.ManuID = o.id WHERE c.catn LIKE :filtervalues OR o.name LIKE :filtervalues";
+                        $query = "SELECT * FROM All_combined_results WHERE 1=1";
+                        $params = [];
+
+                        if (!empty($_GET['uniprot_search'])) {
+                            $query .= " AND ID = :uniprot_search";
+                            $params[':uniprot_search'] = $_GET['uniprot_search'];
+                        }
+                        if (!empty($_GET['prediction_min'])) {
+                            $query .= " AND predictions >= :prediction_min";
+                            $params[':prediction_min'] = $_GET['prediction_min'];
+                        }
+                        if (!empty($_GET['prediction_max'])) {
+                            $query .= " AND predictions <= :prediction_max";
+                            $params[':prediction_max'] = $_GET['prediction_max'];
+                        }
+                        if (!empty($_GET['aarna_min'])) {
+                            $query .= " AND aaRNA >= :aarna_min";
+                            $params[':aarna_min'] = $_GET['aarna_min'];
+                        }
+                        if (!empty($_GET['aarna_max'])) {
+                            $query .= " AND aaRNA <= :aarna_max";
+                            $params[':aarna_max'] = $_GET['aarna_max'];
+                        }
+                        if (!empty($_GET['pst_prna_min'])) {
+                            $query .= " AND PST_PRNA >= :pst_prna_min";
+                            $params[':pst_prna_min'] = $_GET['pst_prna_min'];
+                        }
+                        if (!empty($_GET['pst_prna_max'])) {
+                            $query .= " AND PST_PRNA <= :pst_prna_max";
+                            $params[':pst_prna_max'] = $_GET['pst_prna_max'];
+                        }
+                        if (!empty($_GET['bindup_min'])) {
+                            $query .= " AND BindUP >= :bindup_min";
+                            $params[':bindup_min'] = $_GET['bindup_min'];
+                        }
+                        if (!empty($_GET['bindup_max'])) {
+                            $query .= " AND BindUP <= :bindup_max";
+                            $params[':bindup_max'] = $_GET['bindup_max'];
+                        }
+                        if (!empty($_GET['ftmap_min'])) {
+                            $query .= " AND FTMap_distances >= :ftmap_min";
+                            $params[':ftmap_min'] = $_GET['ftmap_min'];
+                        }
+                        if (!empty($_GET['ftmap_max'])) {
+                            $query .= " AND FTMap_distances <= :ftmap_max";
+                            $params[':ftmap_max'] = $_GET['ftmap_max'];
+                        }
+                        if (!empty($_GET['rnabindrplus_min'])) {
+                            $query .= " AND RNABindRPlus >= :rnabindrplus_min";
+                            $params[':rnabindrplus_min'] = $_GET['rnabindrplus_min'];
+                        }
+                        if (!empty($_GET['rnabindrplus_max'])) {
+                            $query .= " AND RNABindRPlus <= :rnabindrplus_max";
+                            $params[':rnabindrplus_max'] = $_GET['rnabindrplus_max'];
+                        }
+                        if (!empty($_GET['disordpbind_min'])) {
+                            $query .= " AND DisoRDPbind >= :disordpbind_min";
+                            $params[':disordpbind_min'] = $_GET['disordpbind_min'];
+                        }
+                        if (!empty($_GET['disordpbind_max'])) {
+                            $query .= " AND DisoRDPbind <= :disordpbind_max";
+                            $params[':disordpbind_max'] = $_GET['disordpbind_max'];
+                        }
+                        if (!empty($_GET['hydra_min'])) {
+                            $query .= " AND HydRa >= :hydra_min";
+                            $params[':hydra_min'] = $_GET['hydra_min'];
+                        }
+                        if (!empty($_GET['hydra_max'])) {
+                            $query .= " AND HydRa <= :hydra_max";
+                            $params[':hydra_max'] = $_GET['hydra_max'];
+                        }
+
+                        // Prepare the statement
                         $stmt = $pdo->prepare($query);
-                        $stmt->bindParam(':filtervalues', $filtervalues);
-                        $stmt->execute();
-                        
-                        // count no. rows and initialise displayed count
-                        $rows = $stmt->rowCount();
+                        $stmt->execute($params);
+
+                        // Fetch and display results
                         $displayedCount = 0;
 
-                        // only displays first 100 results 
-                        if ($rows > 100) {
-                            echo "<tr><td colspan='3'> $rows results. Only the first 100 results are displayed.</td></tr>";
+                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            if ($displayedCount >= 500) break;
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row['ID'] ?? 'N/A') . "</td>";
+                            echo "<td>" . htmlspecialchars($row['residue_number'] ?? 'N/A') . "</td>";
+                            echo "<td>" . htmlspecialchars($row['amino_acid'] ?? 'N/A') . "</td>";
+                            echo "<td>" . (isset($row['predictions']) ? round($row['predictions'], 5) : 'N/A') . "</td>";
+                            echo "<td>" . (isset($row['aaRNA']) ? round($row['aaRNA'], 5) : 'N/A') . "</td>";
+                            echo "<td>" . (isset($row['PST_PRNA']) ? round($row['PST_PRNA'], 5) : 'N/A') . "</td>";
+                            echo "<td>" . (isset($row['BindUP']) ? round($row['BindUP'], 5) : 'N/A') . "</td>";
+                            echo "<td>" . (isset($row['FTMap_distances']) ? round($row['FTMap_distances'], 5) : 'N/A') . "</td>";
+                            echo "<td>" . (isset($row['RNABindRPlus']) ? round($row['RNABindRPlus'], 5) : 'N/A') . "</td>";
+                            echo "<td>" . (isset($row['DisoRDPbind']) ? round($row['DisoRDPbind'], 5) : 'N/A') . "</td>";
+                            echo "<td>" . (isset($row['HydRa']) ? round($row['HydRa'], 5) : 'N/A') . "</td>";
+                            echo "</tr>";
+                            $displayedCount++;
                         }
-                        if ($rows > 0) {
-                            while($items = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                if ($displayedCount >= 100) {
-                                    break; // Exit the loop if 100 results have been displayed
-                                    }
-                ?>
-                                <tr>
-                                    <!-- display search results in a table -->
-                                    <td><?= $items['name']; ?></td>
-                                    <td><?= $items['natm']; ?></td>
-                                </tr>
-                <?php
-                                $displayedCount++; // add 1 to the the counter for each displayed result
-                            }
-                        } else {
-                ?>
-                            <tr>
-                                <td colspan="3">No Record Found</td>
-                            </tr>
-                    <?php
+
+                        if ($stmt->rowCount() > 500) {
+                            echo "<tr><td colspan='11'> More than 500 results found. Only the first 500 results are displayed.</td></tr>";
                         }
-                    } catch(PDOException $e) {
+
+                        if ($displayedCount == 0) {
+                            echo "<tr><td colspan='11'>No results found.</td></tr>";
+                        }
+                    } catch (PDOException $e) {
                         echo "Error: " . $e->getMessage();
                     }
                 }
