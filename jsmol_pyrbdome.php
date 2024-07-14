@@ -40,7 +40,15 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
             justify-content: center;
             align-items: center;
         }
-        #JmolDiv {
+        #JmolDiv0 {
+            width: 750px;
+            height: 500px;
+        }
+        #JmolDiv1 {
+            width: 750px;
+            height: 500px;
+        }
+        #JmolDiv2 {
             width: 750px;
             height: 500px;
         }
@@ -98,22 +106,89 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                         $loadScript .= "load '{$pdb_dir}{$pdb_id}_{$chains}_model_predictions.pdb';"; 
 
                         // Display the PDB structure using JSmol
-                        echo "<div class='jmol-container'>
-                                <div id='JmolDiv'></div>
-                                <div class='buttons'>
-                                    <input type=\"button\" value=\"Spacefill\" style=\"width:120px\" onClick=\"javascript:Jmol.script(jmolApplet0,'select *;cartoons off;spacefill only')\"><br />
-                                    <input type=\"button\" value=\"Wire-frame\" style=\"width:120px\" onClick=\"javascript:Jmol.script(jmolApplet0,'select *;cartoons off;wireframe -0.1')\"><br />
-                                    <input type=\"button\" value=\"Ball & Stick\" style=\"width:120px\" onClick=\"javascript:Jmol.script(jmolApplet0,'select *;cartoons off;spacefill 23%;wireframe 0.15')\"><br />
-                                    <input type=\"button\" value=\"Label Atoms\" style=\"width:120px\" onClick=\"javascript:Jmol.script(jmolApplet0,'select *;label %e;')\"><br />
-                                    <input type=\"button\" value=\"Atom Labels Off\" style=\"width:120px\" onClick=\"javascript:Jmol.script(jmolApplet0,'select *;labels off')\"><br />
-
+                        echo "<div class='container'>
+                                <div class='row'>
+                                    <div id='JmolDiv0' class='column column-50'></div>
+                                    <div class='column column-50'>
+                                        <h4>Protein Backbone</h4>
+                                        <div class='row'>
+                                            <div class='checkboxes'>
+                                                <input type='checkbox' id='wireframe' name='wireframe' style='width:50px' onChange='toggleWireframe()' checked>Wire Frame<br />
+                                            </div>
+                                            <div class='checkboxes'>
+                                                <input type='checkbox' id='showAminoAcids' name='showAminoAcids' style='width:50px' onChange='toggleShowAminoAcids()'>Show Amino Acids<br />
+                                            </div>
+                                            <div class='checkboxes'>
+                                                <input type='checkbox' id='showAtoms' name='showAtoms' style='width:50px' onChange='toggleShowAtoms()' checked>Show Atoms<br />
+                                            </div>
+                                        </div>
+                                        <br><h6>Backbone</h6>
+                                        <div class='row'>
+                                            <div class='radio-buttons'>
+                                                <p>Weight</p>
+                                                <input type='radio' id='backbone0_6' name='backbone' value='0.6' style='width:50px' onChange='toggleBackbone()'>0.6<br />
+                                                <input type='radio' id='backbone0_3' name='backbone' value='0.3' style='width:50px' onChange='toggleBackbone()'>0.3<br />
+                                                <input type='radio' id='backboneOff' name='backbone' value='off' style='width:50px' onChange='toggleBackbone()' checked>Off<br />
+                                            </div>
+                                            <div class='radio-buttons'>
+                                                <p>Colour</p>
+                                                <input type='radio' id='backboneStructure' name='backboneColour' value='structure' style='width:50px' onChange='toggleBackboneColour()'>Structure<br />
+                                                <input type='radio' id='backboneGreen' name='backboneColour' value='green' style='width:50px' onChange='toggleBackboneColour()'>Green<br />
+                                                <input type='radio' id='backboneRed' name='backboneColour' value='red' style='width:50px' onChange='toggleBackboneColour()'>Red<br />
+                                            </div>
+                                        </div>
+                                        <h6>Trace</h6>
+                                        <div class='row'>
+                                            <div class='radio-buttons'>
+                                                <p>Weight</p>
+                                                <input type='radio' id='traceStructure' name='trace' value='structure' style='width:50px' onChange='toggleTrace()'>Structure<br />
+                                                <input type='radio' id='trace0_8' name='trace' value='0.8' style='width:50px' onChange='toggleTrace()'>0.8<br />
+                                                <input type='radio' id='trace0_4' name='trace' value='0.4' style='width:50px' onChange='toggleTrace()'>0.4<br />
+                                                <input type='radio' id='traceOff' name='trace' value='off' style='width:50px' onChange='toggleTrace()' checked>Off<br />
+                                            </div>
+                                            <div class='radio-buttons'>
+                                                <p>Colour</p>
+                                                <input type='radio' id='traceColourStructure' name='traceColour' value='structure' style='width:50px' onChange='toggleTraceColour()'>Structure<br />
+                                                <input type='radio' id='traceColourOlive' name='traceColour' value='olive' style='width:50px' onChange='toggleTraceColour()'>Olive<br />
+                                                <input type='radio' id='traceColourAmino' name='traceColour' value='amino' style='width:50px' onChange='toggleTraceColour()'>Amino<br />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>";
+                                <br>
+                                <div class='row'>
+                                    <div id='JmolDiv2' class='column column-50'></div>
+                                </div>
+                                <br>
+                                <div class='row'>
+                                    <div id='JmolDiv1' class='column column-50'></div>
+                                    <div class='column column-50'>
+                                        <h4>Strands</h4>
+                                        <div class='row'>
+                                            <div class='radio-buttons'>
+                                                <p>Count</p>
+                                                <input type='radio' id='strandCount_1' name='strandCount' value='strand_1' style='width:50px' onChange='toggleStrandCount()'>1<br />
+                                                <input type='radio' id='strandCount_5' name='strandCount' value='strand_5' style='width:50px' onChange='toggleStrandCount()'>5<br />
+                                                <input type='radio' id='strandCount_11' name='strandCount' value='strand_11' style='width:50px' onChange='toggleStrandCount()' checked>11<br />
+                                                <input type='radio' id='strandCount_20' name='strandCount' value='strand_20' style='width:50px' onChange='toggleStrandCount()'>20<br />
+                                            </div>
+
+                                            <div class='radio-buttons'>
+                                                <p>Colour</p>
+                                                <input type='radio' id='strandColourStructure' name='strandColour' value='Structure' style='width:50px' onChange='toggleStrandColour()'>Structure<br />
+                                                <input type='radio' id='strandColourAmino' name='strandColour' value='Amino' style='width:50px' onChange='toggleStrandColour()' checked>Amino<br />
+                                                <input type='radio' id='strandColourBlue' name='strandColour' value='Blue' style='width:50px' onChange='toggleStrandColour()'>Blue<br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>";
 
                         echo "<script type=\"text/javascript\">
                             $(document).ready(function(){
                                 var loadScript = `" . $loadScript . "`;
-                                var JmolInfo = {
+
+                                var JmolInfo0 = {
                                     width: '100%',
                                     height: '100%',
                                     color: '#E2F4F5',
@@ -126,12 +201,49 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                     use: 'html5',
                                     readyFunction: function(applet) {
                                         console.log('Jmol is ready');
-                                        Jmol.script(applet, loadScript);
+                                        Jmol.script(applet, loadScript + '; spacefill 0.25; wireframe 0.1;');
                                     }
                                 };
-                                $('#JmolDiv').html(Jmol.getAppletHtml('jmolApplet0', JmolInfo));
+                                $('#JmolDiv0').html(Jmol.getAppletHtml('jmolApplet0', JmolInfo0));
+
+                                var JmolInfo1 = {
+                                    width: '100%',
+                                    height: '100%',
+                                    color: '#E2F4F5',
+                                    debug: false,
+                                    disableJ2SLoadMonitor: true,
+                                    disableInitialConsole: true,
+                                    addSelectionOptions: false,
+                                    j2sPath: 'jsmol/j2s',
+                                    serverURL: 'jsmol/php/jsmol.php',
+                                    use: 'html5',
+                                    readyFunction: function(applet) {
+                                        console.log('Jmol is ready');
+                                        Jmol.script(applet, loadScript + '; spacefill off; wireframe off; strands on; set strands 11; color strands amino;');
+                                    }
+                                };
+                                $('#JmolDiv1').html(Jmol.getAppletHtml('jmolApplet1', JmolInfo1));
+
+                                var JmolInfo2 = {
+                                    width: '100%',
+                                    height: '100%',
+                                    color: '#E2F4F5',
+                                    debug: false,
+                                    disableJ2SLoadMonitor: true,
+                                    disableInitialConsole: true,
+                                    addSelectionOptions: false,
+                                    j2sPath: 'jsmol/j2s',
+                                    serverURL: 'jsmol/php/jsmol.php',
+                                    use: 'html5',
+                                    readyFunction: function(applet) {
+                                        console.log('Jmol is ready');
+                                        Jmol.script(applet, loadScript + '; set frank off; select all; hbonds off;select all; spin off; wireframe off; spacefill off; trace off; set ambient 40; set specpower 40; slab off; ribbons off; backbone off; cartoons off; label off; monitor off; rotate x -90; rotate y 60; select nucleic; color red; select protein; color magenta; select protein, nucleic; wireframe; select amino; spacefill; select hetero; wireframe off;');
+                                    }
+                                };
+                                $('#JmolDiv2').html(Jmol.getAppletHtml('jmolApplet2', JmolInfo2));
                             });
                         </script>";
+
                     } else {
                         echo "<p>No PDB IDs found for the given UniProt ID.</p>";
                     }
@@ -143,4 +255,124 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         </div>
     </div>
 </body>
+
+<script>
+    function toggleWireframe() {
+        const wireframeOn = document.getElementById('wireframe').checked;
+        if (wireframeOn) {
+            Jmol.script(jmolApplet0, 'select *;wireframe 0.1');
+        } else {
+            Jmol.script(jmolApplet0, 'select *;wireframe off');
+        }
+    }
+
+    function toggleShowAminoAcids() {
+        const showAminoAcidsOn = document.getElementById('showAminoAcids').checked;
+        if (showAminoAcidsOn) {
+            Jmol.script(jmolApplet0, 'select *;label %n;');
+        } else {
+            Jmol.script(jmolApplet0, 'select *;label off;');        
+        }
+    }
+
+    function toggleShowAtoms() {
+        const showAtomsOn = document.getElementById('showAtoms').checked;
+        if (showAtomsOn) {
+            Jmol.script(jmolApplet0, 'select *;spacefill 0.25;');
+        } else {
+            Jmol.script(jmolApplet0, 'select *;spacefill off');        
+        }
+    }
+
+    function toggleBackbone() {
+        const backbone0_6 = document.getElementById('backbone0_6').checked;
+        const backbone0_3 = document.getElementById('backbone0_3').checked;
+        const backboneOff = document.getElementById('backboneOff').checked;
+        
+        if (backbone0_6) {
+            Jmol.script(jmolApplet0, 'select *;backbone 0.6');
+        } else if (backbone0_3) {
+            Jmol.script(jmolApplet0, 'select *;backbone 0.3');
+        } else if (backboneOff) {
+            Jmol.script(jmolApplet0, 'select *;backbone off');
+        }
+    }
+
+    function toggleBackboneColour() {
+        const backboneStructure = document.getElementById('backboneStructure').checked;
+        const backboneGreen = document.getElementById('backboneGreen').checked;
+        const backboneRed = document.getElementById('backboneRed').checked;
+        
+        if (backboneStructure) {
+            Jmol.script(jmolApplet0, 'select *;color backbone structure');
+        } else if (backboneRed) {
+            Jmol.script(jmolApplet0, 'select *;color backbone firebrick');
+        } else if (backboneGreen) {
+            Jmol.script(jmolApplet0, 'select *;color backbone greenyellow');
+        }
+    }
+
+    function toggleTrace() {
+        const traceStructure = document.getElementById('traceStructure').checked;
+        const trace0_8 = document.getElementById('trace0_8').checked;
+        const trace0_4 = document.getElementById('trace0_4').checked;
+        const traceOff = document.getElementById('traceOff').checked;
+
+        if (traceStructure) {
+            Jmol.script(jmolApplet0, 'select *;trace structure');
+        } else if (trace0_8) {
+            Jmol.script(jmolApplet0, 'select *;trace 0.8');
+        } else if (trace0_4) {
+            Jmol.script(jmolApplet0, 'select *;trace 0.4');
+        } else if (traceOff) {
+            Jmol.script(jmolApplet0, 'select *;trace off');
+        }
+    }
+
+    function toggleTraceColour() {
+        const traceColourStructure = document.getElementById('traceColourStructure').checked;
+        const traceColourOlive = document.getElementById('traceColourOlive').checked;
+        const traceColourAmino = document.getElementById('traceColourAmino').checked;
+
+        if (traceColourStructure) {
+            Jmol.script(jmolApplet0, 'select *;color trace structure');
+        } else if (traceColourOlive) {
+            Jmol.script(jmolApplet0, 'select *;color trace olive');
+        } else if (traceColourAmino) {
+            Jmol.script(jmolApplet0, 'select *;color trace amino');
+        }
+    }
+
+    function toggleStrandCount() {
+        const strandCount_1 = document.getElementById('strandCount_1').checked;
+        const strandCount_5 = document.getElementById('strandCount_5').checked;
+        const strandCount_11 = document.getElementById('strandCount_11').checked;
+        const strandCount_20 = document.getElementById('strandCount_20').checked;
+
+        if (strandCount_1) {
+            Jmol.script(jmolApplet1, 'select *;set strands 1');
+        } else if (strandCount_5) {
+            Jmol.script(jmolApplet1, 'select *;set strands 5');
+        } else if (strandCount_11) {
+            Jmol.script(jmolApplet1, 'select *;set strands 11');
+        } else if (strandCount_20) {
+            Jmol.script(jmolApplet1, 'select *;set strands 20');
+        }
+    }
+
+    function toggleStrandColour() {
+        const strandColourStructure = document.getElementById('strandColourStructure').checked;
+        const strandColourAmino = document.getElementById('strandColourAmino').checked;
+        const strandColourBlue = document.getElementById('strandColourBlue').checked;
+
+        if (strandColourStructure) {
+            Jmol.script(jmolApplet1, 'select *;color strands structure');
+        } else if (strandColourAmino) {
+            Jmol.script(jmolApplet1, 'select *;color strands amino');
+        } else if (strandColourBlue) {
+            Jmol.script(jmolApplet1, 'select *;color strands slateblue');
+        }
+    }
+
+</script>
 </html>
