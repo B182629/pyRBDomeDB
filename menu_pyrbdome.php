@@ -11,30 +11,30 @@
     /* Apply styles to the entire body */
     body {
       margin: 0; /* Remove default margin */
-      font-family: Arial, Helvetica, sans-serif; /* Set font family */
     }
 
     /* Style for the navigation bar */
     .topnav {
       overflow: hidden; /* Hide overflowing content */
-      background-color: #79213c; /* Set background color */
+      background-color: #f4f4f4; /* Set background color */
       text-align: center; /* Center align the menu items */
+      border-bottom: 1px solid #d4d4d4; /* Add bottom border */
     }
 
     /* Style for each navigation link */
     .topnav a {
       display: inline-block; /* Change from float to inline-block to create horizontal layout */
-      color: #f2f2f2; /* Set text color */
+      color: #79213c; /* Set text color */
       text-align: center; /* Center align text */
-      padding: 20px 40px; /* Adjust padding as needed for spacing */
+      padding: 15px 40px; /* Adjust padding as needed for spacing */
       text-decoration: none; /* Remove underline */
       font-size: 17px; /* Set font size */
     }
 
     /* Style for navigation links when hovered */
     .topnav a:hover {
-      background-color: #f3d5de; /* Change background color on hover */
-      color: black; /* Change text color on hover */
+      background-color: #ececec; /* Change background color on hover */
+      color: #3d061e; /* Change text color on hover */
     }
 
     </style>
@@ -46,11 +46,11 @@
     <div class="topnav">
         <!-- Navigation links; active sets the 'default' page to Home -->
         <a class="active" href="home_pyrbdome.php">Home</a>
-        <a href="search_uniprot_pyrbdome.php">Search UniProt ID</a>
-        <a href="filter_pyrbdome.php"> Filter Results</a>
-        <a href="jsmol_pyrbdome.php"> JSmol </a>
-        <a href="sequence_pyrbdome.php"> Sequence </a>
+        <a href="search_uniprot_pyrbdome.php"> Browse Results </a>
+        <a href="sequence_pyrbdome.php"> Prediction Plots </a>
+        <a href="jsmol_pyrbdome.php"> JSmol Visualisation </a>
         <a href="statistics_pyrbdome.php"> XgBoost Statistics </a>
+        <a href="about_pyrbdome.php"> About pyRBDome </a>
     </div>
 
 </body>

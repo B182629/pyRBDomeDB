@@ -28,13 +28,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
     <title>JSmol</title>
 
     <style>
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
+
         .jmol-container {
             display: flex;
             justify-content: center;
@@ -66,10 +60,20 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
 </head>
 
 <body>
+    <div class='container'>
+        <br>
+        <div class="row">
+            <h3>pyRBDome Results Visualisation with JSMOL</h3>
+        </div>
+        <div class="row">
+            <p>The PyRBDome pipeline generates PDB files for each individual predictor, allowing for interactive visualisation of proteins.</p>
+            <br>
+        </div>  
+    </div>
     <div class="container">
         <div class="row">
             <form method="GET" action="jsmol_pyrbdome.php">
-                <label for="uniprot_id"><h3>Enter UniProt ID:</h3></label>
+                <label for="uniprot_id">UniProt ID</label>
                 <input type="text" id="uniprot_id" name="uniprot_id" required>
                 <input type="submit" value="Search">
             </form>
@@ -254,6 +258,9 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
             ?>
         </div>
     </div>
+    
+    <?php include 'footer_pyrbdome.php'; ?>
+
 </body>
 
 <script>

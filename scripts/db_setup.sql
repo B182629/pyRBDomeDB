@@ -301,9 +301,3 @@ CREATE TABLE IF NOT EXISTS `rna_bindingsite_analyses_log` (
 );
 
 
-CREATE TABLE IF NOT EXISTS `prediction_scores_plots` (
-`ID` VARCHAR(15) NOT NULL,
-`pdb_id` VARCHAR(20) NOT NULL,
-`chains` CHAR(1),
-`prediction_scores_pdf` LONGBLOB
-);

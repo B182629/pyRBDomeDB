@@ -15,8 +15,16 @@ include 'menu_pyrbdome.php'; // Include menu script to show menu bar.
     <!-- Sets character encoding to UTF-8 for proper rendering of text content, and set viewport properties to device width -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Include Bootstrap CSS for pre designed components for responsive websites to enhance website aesthetic -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+
+    <!-- CSS Reset -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+
+    <!-- Milligram CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+
     <title>Home</title>
 
     <style>
@@ -36,67 +44,20 @@ include 'menu_pyrbdome.php'; // Include menu script to show menu bar.
 
 <body>
     <!-- build layout of website using bootstrap CSS -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- Card for CompoundFinder -->
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h3>CompoundFinder: Search and Filter Molecular Compounds</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4>
-                                    <!-- JavaScript to display greeting based on time of the day -->
-                                    <script type="text/javascript">
-                                        var dt = new Date();
-                                        var thours = dt.getHours();
-                                        if (thours < 12) {
-                                            document.write("<span>Good Morning, Welcome to CompoundFinder!</span>");
-                                        } else if (thours < 18) {
-                                            document.write("<span>Good Afternoon, Welcome to CompoundFinder!</span>");
-                                        } else {
-                                            document.write("<span>Good Evening, Welcome to CompoundFinder!</span>");
-                                        }
-                                    </script>
-                                </h4>
-                                <!-- Information about CompoundFinder including manufacturers links -->
-                                <p>This database compiles information about properties of molecular compounds supplied from <a href="https://www.asinex.com/">Asinex</a>, <a href="https://www.keyorganics.net/">KeyOrganics</a>, <a href="https://www.thermofisher.com/uk/en/home/chemicals/maybridge.html">MayBridge</a>, <a href="https://www.nanosyn.com/">Nanosyn</a> and Oai40000. The database contains compound properties for each compound, including atomic composition, such as number of hydrogen and carbons atoms, structural properties, such as number of rotatble bonds, and other relevant chemical properties, such as the LogP estimate.</p>
-                                <p>The collection of molecules in this database is derived from <a href="http://eduliss.bch.ed.ac.uk/">EDULISS</a>.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Card for Tool Usage and Help -->
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h4>Tool Usage and Help</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!-- Links to tools where hyperlink is hidden until cursor moves over it for better clarity -->
-                                <h5><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2012003/supp2.php" class="black-link">Filter Compounds</a></h5>
-                                <p>This tool allows you to filter compounds by manufacturer, atomic composition and other chemical properties.</p>
-                                <h5><a href= "https://bioinfmsc8.bio.ed.ac.uk/~s2012003/new_search.php" class="black-link">Search Compounds</a></h5>
-                                <p>This tool allows you to search for specific compounds using their full or partial catalogue name, and provides additional compound information.</p>
-                                <h5><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2012003/new_smiles.php" class="black-link">SMILES Search</a></h5>
-                                <p>This tool allows you to search for compounds using a full or partial SMILES string.</p>
-                                <h5><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2012003/db_stats.php" class="black-link">Statistics</a></h5>
-                                <p>This page shows basic database statistics regarding the compound properties, including average, standard deviation, minimum and maximum values for selected manufacturers. Data distribution can also be visualized.</p>
-                                <h5><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2012003/correlations.php" class="black-link">Correlations</a></h5>
-                                <p>This page allows you to select two compound properties to view their correlation. It is important to first select preferred manufacturers on the Statistics page before using this tool.</p>
-                                <p style="color: gray;"><i>Click on a tool name to find out more.</i></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class='container'>
+        <br>
+        <h3>pyRBDomeDB: Enhanced RNA-Binding Protein Data</h3>
+
+        <p>pyRBDomeDB is a curated database compiling enhanced RNA-binding protein data generated by the pyRBDome pipeline. The pipeline utilises an XGBoost model, which combines RNA-binding amino acid prediction results from various individual predictor algorithms including <a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4150784/'>aaRNA</a>, <a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4987955/'>BindUP</a>, <a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2647826/'>FTMap</a>, <a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4028231/'>RNABindRPlus</a>, and <a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4605291/'>DisoRDPbind</a>, to improve protein RNA-binding site predictions.</p>
+        <p> More information about <a href='about_pyrbdome.php'> pyRBDome.</a></p>
+        <h4>Features:</h4>
+        <p><b>Browse pyRBDome Results Data: </b>Browse and filter pyRBDome RNA-binding site prediction data by several criterion, such as UniProt ID and prediction scores calculated by the XGBoost model or individual prediction algorithms.</p>
+        <p><b>View Prediction Plots: </b>Retrieve prediction score plots for a UniProt ID of interest. These plots display the RNA-binding probabilities of each amino acid in the protein sequence determined by the XGBoost model.</p>
+        <p><b>Jmol Visualisation: </b>Interactively view the protein structure generated based on prediction results. </p>
+        <h4>Getting started:</h4>
+
     </div>
-    <!-- JavaScript and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <?php include 'footer_pyrbdome.php'; ?>
 </body>
 </html>

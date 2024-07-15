@@ -29,18 +29,20 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
             width: 100%;
             height: 1060px;
         }
+    
     </style>
 
 </head>
 <body>
 
-    <div class='container'>
+        <div class='container'>
             <br>
             <div class="row">
                 <h3>RNA-binding Amino Acid Prediction Plots</h3>
             </div>
             <div class="row">
-                <p>Search for compounds using their Catalogue Name or Manufacturer. To view more details about a specific compound, click of the 'Catalogue Name' of the compound.</p>
+                <p>The PyRBDome pipeline generates PDF files illustrating RNA-binding amino acid prediction scores for the respective UniProt ID. This page allows you to search for a UniProt ID of interest to retrieve the RNA-binding amino acid prediction probabilities, alongside the identified cross-linked amino acids and protein domains. </p>
+                <br>
             </div>  
         </div>
         <div class="container"> 
@@ -51,7 +53,18 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                         <input type="text" id="uniprot_id" name="uniprot_id" value="<?php echo htmlspecialchars($_GET['uniprot_id'] ?? ''); ?>">
                         <button type="submit">Search</button>
                     </form> 
+                    <?php
+                    if (isset($_GET["uniprot_id"])) {
+                        $uniprot_id = $_GET['uniprot_id'];
+                        echo "<h5>Prediction Plot Guide:</h5>";
+                        echo "<p>The score bar shows the RNA-binding probability for each amino acid residue. These prediction scores are generated from the XGBoost model using all the prediction results.</p>";
+                        echo "<p>The successive rows display the probabilities retrieved from individual predictors including aaRNA, BindUP, FTMap, RNABindRPlus, and DisoRDPbind.</p>";
+                        echo "<p>Cross-linked amino acids are displayed beneath the individual predictors, and domains identified in the sequence are outlined in ovals. </p>";
+                        echo "<p><a href=\"https://www.uniprot.org/uniprotkb/{$uniprot_id}/entry\">More information about {$uniprot_id}</a></p>";
+                    }
+                    ?>
                 </div>
+
                 <div class='column column-67'>
                     <?php
                     if (isset($_GET["uniprot_id"])) {
@@ -90,6 +103,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
             </div>
         </div>
     </div>
+    <?php include 'footer_pyrbdome.php'; ?>
 </body>
 
 </html>
