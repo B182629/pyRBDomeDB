@@ -46,9 +46,9 @@
     <div class="topnav">
         <!-- Navigation links; active sets the 'default' page to Home -->
         <a class="active" href="home_pyrbdome.php">Home</a>
-        <a href="search_uniprot_pyrbdome.php"> Browse Results </a>
+        <a href="filter_pyrbdome.php"> Browse Results </a>
         <a href="sequence_pyrbdome.php"> Prediction Plots </a>
-        <a href="jsmol_pyrbdome.php"> JSmol Visualisation </a>
+        <a href="jsmol_pyrbdome.php">3D Prediction Structures </a>
         <a href="about_pyrbdome.php"> About pyRBDome </a>
     </div>
 

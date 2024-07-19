@@ -33,6 +33,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
             display: flex;
             justify-content: left;
             align-items: left;
+            padding: 1px;
         }
         #JmolDiv0 {
             width: 750px;
@@ -75,9 +76,16 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         #Jmol2 {
             padding: 10px;
             margin-top: 10px;
-
         }
-
+        .rowButtons1 {
+            margin-left: 70px;
+        }
+        .rowButtons2 {
+            margin-left: 50px;
+        }
+        .buttonsContainer {
+            padding: 10px
+        }
     </style>
 </head>
 
@@ -85,75 +93,81 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
     <div class='container'>
         <br>
         <div class="row">
-            <h3>pyRBDome Results Visualisation with Jmol</h3>
+            <h3>RNA-binding Predictions: 3D Protein Structure</h3>
         </div>
         <div class="row">
-            <p>The PyRBDome pipeline generates PDB files for each individual predictor, allowing for interactive visualisation of proteins.</p>
-            <br>
-        </div>  
+            <p>The PyRBDome pipeline generates PDB files containing RNA-binding amino acid probabilities for each protein. Individual predictor algorithms determine RNA-binding predictions, which are fed into an XGBoost model to calculate RNA-bidning probabilities for each amino acid in a protein. Probabilities are displayed in the b-factor column in the PDB files, which are used to visualise the amino acids with high RNA-binding potential using Jmol. </p>
+        </div>
     </div>
     <div class="container">
-        <div class="row">
-            <form method="GET" action="jsmol_pyrbdome.php">
-                <label for="uniprot_id">UniProt ID</label>
-                <input type="text" id="uniprot_id" name="uniprot_id" required>
-                <input type="submit" value="Search">
-            </form>
-        </div>  
-    </div>
-    <div class='container'>
-        <div class="row">
+        <div class='row'>
+            <div class="column column-33">
+                <form method="GET" action="jsmol_pyrbdome.php">
+                    <label for="uniprot_id">UniProt ID</label>
+                    <input type="text" id="uniprot_id" name="uniprot_id" value="<?php echo htmlspecialchars($_GET['uniprot_id'] ?? ''); ?>"required>
+                    <input type="submit" value="Search">
+                </form>
+            </div>
             <?php
-            if (isset($_GET["uniprot_id"])) {
-                $uniprot_id = $_GET['uniprot_id'];
+                if (isset($_GET["uniprot_id"])) {
+                    $uniprot_id = $_GET['uniprot_id'];
 
-                try {
-                    // Connect to MySQL database
-                    $pdo = new PDO("mysql:host={$hostname};dbname={$database}", $username, $password);
-                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    try {
+                        // Connect to MySQL database
+                        $pdo = new PDO("mysql:host={$hostname};dbname={$database}", $username, $password);
+                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    // Prepare and execute the SQL query
-                    $stmt = $pdo->prepare("SELECT ID, pdb_id, chains FROM processed_files_log WHERE ID = :uniprot_id");
-                    $stmt->execute(['uniprot_id' => $uniprot_id]);
-                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                        // Prepare and execute the SQL query
+                        $stmt = $pdo->prepare("SELECT ID, pdb_id, chains FROM processed_files_log WHERE ID = :uniprot_id");
+                        $stmt->execute(['uniprot_id' => $uniprot_id]);
+                        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                    if ($result) {
-                        $pdb_id = $result['pdb_id'];
-                        $chains = $result['chains'];
-                        $uniprot_id = $result['ID'];
-                        $pdb_dir = "./pyRBDome_Notebooks/analysed_pdbs/{$uniprot_id}/prediction_results/" ;
-                        $domain_dir = "./pyRBDome_Notebooks/analysed_pdbs/{$uniprot_id}/filtered_pdb_files/";
-                        
-                        $loadScriptaaRNA = "load '{$pdb_dir}{$pdb_id}_{$chains}_aaRNA.pdb'; ";
-                        $loadScriptPST_PRNA = "load '{$pdb_dir}{$pdb_id}_{$chains}_PST_PRNA.pdb'; ";
-                        $loadScriptBindUP = "load '{$pdb_dir}{$pdb_id}_{$chains}_BindUP.pdb'; ";
-                        $loadScriptFTMap = "load '{$pdb_dir}{$pdb_id}_{$chains}_FTMap_distances.pdb'; ";
-                        $loadScriptDisoRDPbind = "load '{$pdb_dir}{$pdb_id}_{$chains}_DisoRDPbind.pdb'; ";
-                        $loadScriptHydRa = "load '{$pdb_dir}{$pdb_id}_{$chains}_HydRa.pdb'; ";
-                        $loadScriptPredictions = "load '{$pdb_dir}{$pdb_id}_{$chains}_model_predictions.pdb'; ";
+                        if ($result) {
+                            $pdb_id = $result['pdb_id'];
+                            $chains = $result['chains'];
+                            $uniprot_id = $result['ID'];
+                            $pdb_dir = "./pyRBDome_Notebooks/analysed_pdbs/{$uniprot_id}/prediction_results/" ;
+                            $domain_dir = "./pyRBDome_Notebooks/analysed_pdbs/{$uniprot_id}/filtered_pdb_files/";
+                            
+                            $loadScriptPredictions = "load '{$pdb_dir}{$pdb_id}_{$chains}_model_predictions.pdb'; ";
 
-
-                        // Display the PDB structure using JSmol
-                        echo "<button class='jmol-button button-outline' data-target='Jmol2'>RNA-bidning Predictions</button>
-                            <button class='jmol-button button-outline' data-target='Jmol0'>Protein Backbone</button>
-                            <button class='jmol-button button-outline' data-target='Jmol1'>Strands</button>
-                            <br>
+            
+                            echo "<div class='column column-63'>
+                                    <div class='buttonsContainer'>
+                                        <div class='row rowButtons2'><p>Different 3D protein structures can also be viewed by toggling between the options below. RNA-binding structures generated from individual predictor algorithms PDB files are also available.</p></div>
+                                        <div class='row rowButtons1'>
+                                            <button class='jmol-button button-outline' data-target='Jmol2'>RNA-bidning Predictions</button>
+                                            <button class='jmol-button button-outline' data-target='Jmol0'>Protein Backbone</button>
+                                            <button class='jmol-button button-outline' data-target='Jmol1'>Strands</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                         <div class='container jmol-container' id='Jmol2'>
                             <div class='row'>
-                                <div id='JmolDiv2' class='column column-60'></div>
                                 <div class='column column-40'>
-                                    <h4>Misc</h4>
+                                    <h4>RNA-Binding Prediction Structure of " . $uniprot_id . "</h4>     
+                                    <p> RNA-binding probabilities for each amino acid is determined by an XGBoost model, which takes prediction results from several predictor algorithms as input. The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p></p>
+                                    <b>Spacefill:</b> <input type='radio' id='spacefill100' name='spacefill' value='100' style='width:40px' onChange='toggleSpacefill()' checked>100%
+                                    <input type='radio' id='spacefill50' name='spacefill' value='50' style='width:40px' onChange='toggleSpacefill()'>50%
+                                    <input type='radio' id='spacefill25' name='spacefill' value='25' style='width:40px' onChange='toggleSpacefill()'>25%
+                                    <p></p>
+                                    <p>View individual predictor algorithm structures for <a href=\"jsmol_extra_pyrbdome.php?uniprot_id=" . $uniprot_id . "\">" . $uniprot_id . "</a>
+                                    <p><i>If the structure does not load, click inside the structure box.</i></p>
                                 </div>
+                                <div id='JmolDiv2' class='column column-60'></div>
                             </div>
                         <br>
                         </div>
+                    
                         <div class='container jmol-container' id='Jmol0'>
                             <div class='row'>
-                                <div id='JmolDiv0' class='column column-60'></div>
                                 <div class='column column-40'>
-                                    <h4>Protein Backbone</h4>
+                                    <h4>Protein Backbone Structure of " . $uniprot_id . "</h4>
+                                    <p>The protein backbone is what gives the protein its tertiary structure. The 'backbone' display shows the polypeptide backbone of the protein as a train of bonds connecting the adjacent alpha carbons of each amino acid. The 'trace' display is similar to the 'backbone' display, but with smoothed transitions between the alpha carbons of a peptide chain. The 'structure' colour scheme illustrates the secondary structure of the protein, assigning a pink colour to alpha helices and orange to beta sheets. The 'amino' colour scheme assigns different colours based on the chemical properties of the amino acids. </p>
                                     <div class='row'>
                                         <div class='checkboxes'>
                                             <input type='checkbox' id='wireframe' name='wireframe' style='width:40px' onChange='toggleWireframe()' checked>Wire Frame<br />
@@ -165,58 +179,51 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                             <input type='checkbox' id='showAtoms' name='showAtoms' style='width:40px' onChange='toggleShowAtoms()' checked>Atoms<br />
                                         </div>
                                     </div>
-                                    <br><h6>Backbone</h6>
-                                    <div class='row'>
-                                        <div class='radio-buttons'>
-                                            <p>Weight</p>
-                                            <input type='radio' id='backbone0_6' name='backbone' value='0.6' style='width:50px' onChange='toggleBackbone()'>0.6<br />
-                                            <input type='radio' id='backbone0_3' name='backbone' value='0.3' style='width:50px' onChange='toggleBackbone()'>0.3<br />
-                                            <input type='radio' id='backboneOff' name='backbone' value='off' style='width:50px' onChange='toggleBackbone()' checked>Off<br />
-                                        </div>
-                                        <div class='radio-buttons'>
-                                            <p>Colour</p>
-                                            <input type='radio' id='backboneStructure' name='backboneColour' value='structure' style='width:50px' onChange='toggleBackboneColour()'>Structure<br />
-                                            <input type='radio' id='backboneGreen' name='backboneColour' value='green' style='width:50px' onChange='toggleBackboneColour()'>Green<br />
-                                            <input type='radio' id='backboneRed' name='backboneColour' value='red' style='width:50px' onChange='toggleBackboneColour()'>Red<br />
-                                        </div>
-                                    </div>
-                                    <h6>Trace</h6>
-                                    <div class='row'>
-                                        <div class='radio-buttons'>
-                                            <p>Weight</p>
-                                            <input type='radio' id='traceStructure' name='trace' value='structure' style='width:50px' onChange='toggleTrace()'>Structure<br />
-                                            <input type='radio' id='trace0_8' name='trace' value='0.8' style='width:50px' onChange='toggleTrace()'>0.8<br />
-                                            <input type='radio' id='trace0_4' name='trace' value='0.4' style='width:50px' onChange='toggleTrace()'>0.4<br />
-                                            <input type='radio' id='traceOff' name='trace' value='off' style='width:50px' onChange='toggleTrace()' checked>Off<br />
-                                        </div>
-                                        <div class='radio-buttons'>
-                                            <p>Colour</p>
-                                            <input type='radio' id='traceColourStructure' name='traceColour' value='structure' style='width:50px' onChange='toggleTraceColour()'>Structure<br />
-                                            <input type='radio' id='traceColourOlive' name='traceColour' value='olive' style='width:50px' onChange='toggleTraceColour()'>Olive<br />
-                                            <input type='radio' id='traceColourAmino' name='traceColour' value='amino' style='width:50px' onChange='toggleTraceColour()'>Amino<br />
-                                        </div>
-                                    </div>
+                                    <p></p>
+                                    <h5>Backbone</h5>
+                                    <b>Weight:</b><input type='radio' id='backbone0_6' name='backbone' value='0.6' style='width:40px' onChange='toggleBackbone()'>0.6
+                                    <input type='radio' id='backbone0_3' name='backbone' value='0.3' style='width:40px' onChange='toggleBackbone()'>0.3
+                                    <input type='radio' id='backboneOff' name='backbone' value='off' style='width:40px' onChange='toggleBackbone()' checked>Off<br />
+
+                                    <b>Colour:</b><input type='radio' id='backboneStructure' name='backboneColour' value='structure' style='width:40px' onChange='toggleBackboneColour()'>Structure
+                                    <input type='radio' id='backboneGreen' name='backboneColour' value='green' style='width:40px' onChange='toggleBackboneColour()'>Green
+                                    <input type='radio' id='backboneRed' name='backboneColour' value='red' style='width:40px' onChange='toggleBackboneColour()'>Red<br />
+
+                                    <br><h5>Trace</h5>
+                                    <b>Weight:</b><input type='radio' id='traceStructure' name='trace' value='structure' style='width:40px' onChange='toggleTrace()'>Structure
+                                    <input type='radio' id='trace0_8' name='trace' value='0.8' style='width:40px' onChange='toggleTrace()'>0.8
+                                    <input type='radio' id='trace0_4' name='trace' value='0.4' style='width:40px' onChange='toggleTrace()'>0.4
+                                    <input type='radio' id='traceOff' name='trace' value='off' style='width:40px' onChange='toggleTrace()' checked>Off<br />
+
+                                    <b>Colour:</b><input type='radio' id='traceColourStructure' name='traceColour' value='structure' style='width:50px' onChange='toggleTraceColour()'>Structure
+                                    <input type='radio' id='traceColourOlive' name='traceColour' value='olive' style='width:50px' onChange='toggleTraceColour()'>Olive
+                                    <input type='radio' id='traceColourAmino' name='traceColour' value='amino' style='width:50px' onChange='toggleTraceColour()'>Amino<br />
+
+                                    <p><i>If the structure does not load, click inside the structure box.</i></p>
+
                                 </div>
+                                <div id='JmolDiv0' class='column column-60'></div>
                             </div>
                         </div>
                         <div class='container jmol-container' id='Jmol1'>
                             <div class='row'>
-                                <div id='JmolDiv1' class='column column-60'></div>
                                 <div class='column column-40'>
-                                    <div class='radio-buttons'>
-                                        <p>Count</p>
-                                        <input type='radio' id='strandCount_1' name='strandCount' value='strand_1' style='width:50px' onChange='toggleStrandCount()'>1<br />
-                                        <input type='radio' id='strandCount_5' name='strandCount' value='strand_5' style='width:50px' onChange='toggleStrandCount()'>5<br />
-                                        <input type='radio' id='strandCount_11' name='strandCount' value='strand_11' style='width:50px' onChange='toggleStrandCount()' checked>11<br />
-                                        <input type='radio' id='strandCount_20' name='strandCount' value='strand_20' style='width:50px' onChange='toggleStrandCount()'>20<br />
-                                    </div>
-                                    <div class='radio-buttons'>
-                                        <p>Colour</p>
-                                        <input type='radio' id='strandColourStructure' name='strandColour' value='Structure' style='width:50px' onChange='toggleStrandColour()'>Structure<br />
-                                        <input type='radio' id='strandColourAmino' name='strandColour' value='Amino' style='width:50px' onChange='toggleStrandColour()' checked>Amino<br />
-                                        <input type='radio' id='strandColourBlue' name='strandColour' value='Blue' style='width:50px' onChange='toggleStrandColour()'>Blue<br />
-                                    </div>
+                                    <h4>Strands Structure of " . $uniprot_id . "</h4>
+
+                                    <b>Count:</b><input type='radio' id='strandCount_1' name='strandCount' value='strand_1' style='width:40px' onChange='toggleStrandCount()'>1
+                                    <input type='radio' id='strandCount_5' name='strandCount' value='strand_5' style='width:40px' onChange='toggleStrandCount()'>5
+                                    <input type='radio' id='strandCount_11' name='strandCount' value='strand_11' style='width:40px' onChange='toggleStrandCount()' checked>11
+                                    <input type='radio' id='strandCount_20' name='strandCount' value='strand_20' style='width:40px' onChange='toggleStrandCount()'>20<br />
+
+                                    <b>Colour:</b><input type='radio' id='strandColourStructure' name='strandColour' value='Structure' style='width:40px' onChange='toggleStrandColour()'>Structure
+                                    <input type='radio' id='strandColourAmino' name='strandColour' value='Amino' style='width:40px' onChange='toggleStrandColour()' checked>Amino
+                                    <input type='radio' id='strandColourBlue' name='strandColour' value='Blue' style='width:40px' onChange='toggleStrandColour()'>Blue<br />
+
+                                    <p></p>
+                                    <p><i>If the structure does not load, click inside the structure box.</i></p>
+
                                 </div>
+                                <div id='JmolDiv1' class='column column-60'></div>
                             </div>
                         </div>";
 
@@ -278,7 +285,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                 };
                                 $('#JmolDiv2').html(Jmol.getAppletHtml('jmolApplet2', JmolInfo2));
                             });
-                        </script>";
+                            </script>";
 
                     } else {
                         echo "<p>No PDB files found for the given UniProt ID.</p>";
@@ -336,6 +343,20 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
             }
         });
     });
+
+    function toggleSpacefill() {
+        const spacefill100 = document.getElementById('spacefill100').checked;
+        const spacefill50 = document.getElementById('spacefill50').checked;
+        const spacefill25 = document.getElementById('spacefill25').checked;
+        
+        if (spacefill100) {
+            Jmol.script(jmolApplet2, 'select *; spacefill');
+        } else if (spacefill50) {
+            Jmol.script(jmolApplet2, 'select *;spacefill 50%');
+        } else if (spacefill25) {
+            Jmol.script(jmolApplet2, 'select *;spacefill 25%');
+        }
+    }
 
     function toggleWireframe() {
         const wireframeOn = document.getElementById('wireframe').checked;
