@@ -101,12 +101,17 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                     <input type="hidden" id="hydra_min_hidden" name="hydra_min" value="<?php echo htmlspecialchars($_GET['hydra_min'] ?? ''); ?>">
                     <input type="hidden" id="hydra_max_hidden" name="hydra_max" value="<?php echo htmlspecialchars($_GET['hydra_max'] ?? ''); ?>">
                     
-                    <label for="uniprot_search">Search UniProt:</label>
-                    <input type="text" id="uniprot_search" name="uniprot_search" placeholder="Enter UniProt ID" value="<?php echo htmlspecialchars($_GET['uniprot_search'] ?? ''); ?>">
+                    <label for="uniprot_search">UniProt ID</label>
+                    <input type="text" id="uniprot_search" name="uniprot_search" placeholder="ex. A0AV96" value="<?php echo htmlspecialchars($_GET['uniprot_search'] ?? ''); ?>">
+                    <label for="organism_search">Organism</label>
+                    <input type="text" id="organism_search" name="organism_search" placeholder="ex. Homo sapiens" value="<?php echo htmlspecialchars($_GET['organism_search'] ?? ''); ?>">
+                    
                     <button type="submit">Search</button>
                 </form>
                 <form action="filter_pyrbdome.php" method="GET">
                     <input type="hidden" id="uniprot_search_hidden" name="uniprot_search" value="<?php echo htmlspecialchars($_GET['uniprot_search'] ?? ''); ?>">
+                    <input type="hidden" id="organism_search" name="organism_search" value="<?php echo htmlspecialchars($_GET['organism_search'] ?? ''); ?>">
+
                     <div class="filter-row">
                         <label for="prediction_min">XGBoost:<font color='#FFFFFF'>XXXX</font></label>
                         <input type="text" id="prediction_min" name="prediction_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['prediction_min'] ?? ''); ?>">
@@ -119,7 +124,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                     </div>
 
                     <div class="filter-row">
-                        <label for="pst_prna_min">PST<font color='#FFFFFF'>.</font>PRNA:<font color='#FFFFFF'>XX</font></label>
+                        <label for="pst_prna_min">PST<font color='#FFFFFF'>.i</font>PRNA:<font color='#FFFFFF'>XX</font></label>
                         <input type="text" id="pst_prna_min" name="pst_prna_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['pst_prna_min'] ?? ''); ?>">
                         <input type="text" id="pst_prna_max" name="pst_prna_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['pst_prna_max'] ?? ''); ?>">
                     </div>
@@ -250,12 +255,18 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 
                 // construct mysql query based on filter values and prepare query to avoid SQL injection
-                $query = "SELECT * FROM All_combined_results WHERE 1=1";
+                $query = "SELECT * FROM All_combined_results a LEFT JOIN protein_info p ON a.ID = p.uniprot_id WHERE 1=1";
                 $params = [];
 
                 if (!empty($_GET['uniprot_search'])) {
                     $query .= " AND ID = :uniprot_search";
                     $params[':uniprot_search'] = $_GET['uniprot_search'];
+                }
+                if (!empty($_GET['organism_search'])) {                    
+                    $query .= " AND organism LIKE :organism_search";
+                    $organism = $_GET['organism_search'];
+                    $organism = '%' . $organism . '%';
+                    $params[':organism_search'] = $organism;
                 }
                 if (!empty($_GET['prediction_min'])) {
                     $query .= " AND predictions >= :prediction_min";
@@ -334,6 +345,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                     <thead>
                         <tr>
                             <th>UniProt ID</th>
+                            <th>Organism</th>
                             <th>Residue</th>
                             <th>Amino Acid</th>
                             <th>XGBoost</th>
@@ -352,6 +364,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                     if ($displayedCount >= 1000) break;
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($row['ID'] ?? 'N/A') . "</td>";
+                            echo "<td>" . htmlspecialchars($row['organism'] ?? 'N/A') . "</td>";
                             echo "<td>" . htmlspecialchars($row['residue_number'] ?? 'N/A') . "</td>";
                             echo "<td>" . htmlspecialchars($row['amino_acid'] ?? 'N/A') . "</td>";
                             echo "<td>" . (isset($row['predictions']) ? round($row['predictions'], 5) : 'N/A') . "</td>";

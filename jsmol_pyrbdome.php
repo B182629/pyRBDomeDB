@@ -92,12 +92,8 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
 <body>
     <div class='container'>
         <br>
-        <div class="row">
             <h3>RNA-binding Predictions: 3D Protein Structure</h3>
-        </div>
-        <div class="row">
-            <p>The PyRBDome pipeline generates PDB files containing RNA-binding amino acid probabilities for each protein. Individual predictor algorithms determine RNA-binding predictions, which are fed into an XGBoost model to calculate RNA-bidning probabilities for each amino acid in a protein. Probabilities are displayed in the b-factor column in the PDB files, which are used to visualise the amino acids with high RNA-binding potential using Jmol. </p>
-        </div>
+            <p>The PyRBDome pipeline generates PDB files containing RNA-binding amino acid probabilities for each protein, allowing for easy visualisation of protein RNA-binding probabilities using Jmol. The PDB files for the XGBoost model predictions and the individual predictors can be downloaded by clicking 'Download PDB Files'. Probabilities are displayed in the b-factor column of the PDB files, whereby the 'temperature' colour spectrum in Jmol illustrates RNA-binding probabilities of each amino acid in the protein. Basic Jmol instructions are found at the bottom of the page.</p>
     </div>
     <div class="container">
         <div class='row'>
@@ -134,7 +130,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
             
                             echo "<div class='column column-63'>
                                     <div class='buttonsContainer'>
-                                        <div class='row rowButtons2'><p>Different 3D protein structures can also be viewed by toggling between the options below. RNA-binding structures generated from individual predictor algorithms PDB files are also available.</p></div>
+                                        <div class='row rowButtons2'><p ><i>Different 3D protein structures can also be viewed by toggling between the options below.</i></p></div>
                                         <div class='row rowButtons1'>
                                             <button class='jmol-button button-outline' data-target='Jmol2'>RNA-bidning Predictions</button>
                                             <button class='jmol-button button-outline' data-target='Jmol0'>Protein Backbone</button>
@@ -149,14 +145,17 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                             <div class='row'>
                                 <div class='column column-40'>
                                     <h4>RNA-Binding Prediction Structure of " . $uniprot_id . "</h4>     
-                                    <p> RNA-binding probabilities for each amino acid is determined by an XGBoost model, which takes prediction results from several predictor algorithms as input. The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p style='font-size: 15px;'> RNA-binding probabilities for each amino acid is determined by an XGBoost model, which takes prediction results from several predictor algorithms as input. The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p></p>
+                                    <p>View individual predictor algorithm structures for <a href=\"jsmol_extra_pyrbdome.php?uniprot_id=" . $uniprot_id . "\">" . $uniprot_id . "</a>
                                     <p></p>
                                     <b>Spacefill:</b> <input type='radio' id='spacefill100' name='spacefill' value='100' style='width:40px' onChange='toggleSpacefill()' checked>100%
                                     <input type='radio' id='spacefill50' name='spacefill' value='50' style='width:40px' onChange='toggleSpacefill()'>50%
                                     <input type='radio' id='spacefill25' name='spacefill' value='25' style='width:40px' onChange='toggleSpacefill()'>25%
                                     <p></p>
-                                    <p>View individual predictor algorithm structures for <a href=\"jsmol_extra_pyrbdome.php?uniprot_id=" . $uniprot_id . "\">" . $uniprot_id . "</a>
-                                    <p><i>If the structure does not load, click inside the structure box.</i></p>
+                                    <button id='downloadButton'>Download PDB Files</button>
+                                    <p></p>
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
                                 </div>
                                 <div id='JmolDiv2' class='column column-60'></div>
                             </div>
@@ -167,7 +166,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                             <div class='row'>
                                 <div class='column column-40'>
                                     <h4>Protein Backbone Structure of " . $uniprot_id . "</h4>
-                                    <p>The protein backbone is what gives the protein its tertiary structure. The 'backbone' display shows the polypeptide backbone of the protein as a train of bonds connecting the adjacent alpha carbons of each amino acid. The 'trace' display is similar to the 'backbone' display, but with smoothed transitions between the alpha carbons of a peptide chain. The 'structure' colour scheme illustrates the secondary structure of the protein, assigning a pink colour to alpha helices and orange to beta sheets. The 'amino' colour scheme assigns different colours based on the chemical properties of the amino acids. </p>
+                                    <p style='font-size: 15px;'>The protein backbone is what gives the protein its tertiary structure. The 'backbone' display shows the polypeptide backbone of the protein as a train of bonds connecting the adjacent alpha carbons of each amino acid. The 'trace' display is similar to the 'backbone' display, but with smoothed transitions between the alpha carbons of a peptide chain. The 'structure' colour scheme illustrates the secondary structure of the protein, assigning a pink colour to alpha helices and orange to beta sheets. The 'amino' colour scheme assigns different colours based on the chemical properties of the amino acids. </p>
                                     <div class='row'>
                                         <div class='checkboxes'>
                                             <input type='checkbox' id='wireframe' name='wireframe' style='width:40px' onChange='toggleWireframe()' checked>Wire Frame<br />
@@ -179,27 +178,27 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                             <input type='checkbox' id='showAtoms' name='showAtoms' style='width:40px' onChange='toggleShowAtoms()' checked>Atoms<br />
                                         </div>
                                     </div>
-                                    <p></p>
-                                    <h5>Backbone</h5>
-                                    <b>Weight:</b><input type='radio' id='backbone0_6' name='backbone' value='0.6' style='width:40px' onChange='toggleBackbone()'>0.6
+                                    <br>
+                                    <b>Backbone Weight:</b><input type='radio' id='backbone0_6' name='backbone' value='0.6' style='width:40px' onChange='toggleBackbone()'>0.6
                                     <input type='radio' id='backbone0_3' name='backbone' value='0.3' style='width:40px' onChange='toggleBackbone()'>0.3
                                     <input type='radio' id='backboneOff' name='backbone' value='off' style='width:40px' onChange='toggleBackbone()' checked>Off<br />
 
-                                    <b>Colour:</b><input type='radio' id='backboneStructure' name='backboneColour' value='structure' style='width:40px' onChange='toggleBackboneColour()'>Structure
+                                    <b>Backbone Colour:</b><input type='radio' id='backboneStructure' name='backboneColour' value='structure' style='width:40px' onChange='toggleBackboneColour()'>Structure
                                     <input type='radio' id='backboneGreen' name='backboneColour' value='green' style='width:40px' onChange='toggleBackboneColour()'>Green
                                     <input type='radio' id='backboneRed' name='backboneColour' value='red' style='width:40px' onChange='toggleBackboneColour()'>Red<br />
-
-                                    <br><h5>Trace</h5>
-                                    <b>Weight:</b><input type='radio' id='traceStructure' name='trace' value='structure' style='width:40px' onChange='toggleTrace()'>Structure
+                                    <br>
+                                    <b>Trace Weight:</b><input type='radio' id='traceStructure' name='trace' value='structure' style='width:40px' onChange='toggleTrace()'>Structure
                                     <input type='radio' id='trace0_8' name='trace' value='0.8' style='width:40px' onChange='toggleTrace()'>0.8
                                     <input type='radio' id='trace0_4' name='trace' value='0.4' style='width:40px' onChange='toggleTrace()'>0.4
                                     <input type='radio' id='traceOff' name='trace' value='off' style='width:40px' onChange='toggleTrace()' checked>Off<br />
 
-                                    <b>Colour:</b><input type='radio' id='traceColourStructure' name='traceColour' value='structure' style='width:50px' onChange='toggleTraceColour()'>Structure
+                                    <b>Trace Colour:</b><input type='radio' id='traceColourStructure' name='traceColour' value='structure' style='width:50px' onChange='toggleTraceColour()'>Structure
                                     <input type='radio' id='traceColourOlive' name='traceColour' value='olive' style='width:50px' onChange='toggleTraceColour()'>Olive
                                     <input type='radio' id='traceColourAmino' name='traceColour' value='amino' style='width:50px' onChange='toggleTraceColour()'>Amino<br />
-
-                                    <p><i>If the structure does not load, click inside the structure box.</i></p>
+                                    <br>
+                                    <button id='downloadButton'>Download PDB Files</button>
+                                    <p></p>
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
 
                                 </div>
                                 <div id='JmolDiv0' class='column column-60'></div>
@@ -285,7 +284,32 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                 };
                                 $('#JmolDiv2').html(Jmol.getAppletHtml('jmolApplet2', JmolInfo2));
                             });
-                            </script>";
+
+                            document.getElementById('downloadButton').addEventListener('click', function() {
+                                const files = [
+                                    '" . $pdb_dir . $pdb_id . "_" . $chains . "_aaRNA.pdb',
+                                    '" . $pdb_dir . $pdb_id . "_" . $chains . "_PST_PRNA.pdb',
+                                    '" . $pdb_dir . $pdb_id . "_" . $chains . "_BindUP.pdb',
+                                    '" . $pdb_dir . $pdb_id . "_" . $chains . "_FTMap_distances.pdb',
+                                    '" . $pdb_dir . $pdb_id . "_" . $chains . "_DisoRDPbind.pdb',
+                                    '" . $pdb_dir . $pdb_id . "_" . $chains . "_HydRa.pdb'
+                                ];
+                            
+                                files.forEach(function(file) {
+                                    const link = document.createElement('a');
+                                    link.href = file;
+                                    link.download = file.split('/').pop();
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                });
+                            });
+                            
+                            </script>
+                        </div>
+                    </div>
+                    <div class='container'>       
+                        <p style='text-align: center;'>Using Jmol: Click and drag inside the box to <b>rotate</b> the structure and use the trackpad to <b>zoom</b> in and out. To <b>identify</b> an amino acid, hover over it with the cursor. Calculate the <b>distance</b> between two amino acids by clicking two amino acids of interest.</p>";
 
                     } else {
                         echo "<p>No PDB files found for the given UniProt ID.</p>";
@@ -298,7 +322,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         </div>
     </div>
 
-    <?php include 'footer_pyrbdome.php'; ?>
+<?php include 'footer_pyrbdome.php'; ?>
 
 </body>
 
