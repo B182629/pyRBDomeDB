@@ -300,4 +300,9 @@ CREATE TABLE IF NOT EXISTS `rna_bindingsite_analyses_log` (
 `HydRa` VARCHAR(32)
 );
 
+CREATE TABLE IF NOT EXISTS `protein_info` (
+`uniprot_id` VARCHAR(15) NOT NULL,
+`organism` VARCHAR(50)
+);
+
 
