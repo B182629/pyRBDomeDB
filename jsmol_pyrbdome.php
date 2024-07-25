@@ -28,7 +28,6 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
     <title>JSmol</title>
 
     <style>
-
         .jmol-container {
             display: flex;
             justify-content: left;
@@ -98,6 +97,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
     <div class="container">
         <div class='row'>
             <div class="column column-33">
+                <!-- form to get uniprot search -->
                 <form method="GET" action="jsmol_pyrbdome.php">
                     <label for="uniprot_id">UniProt ID</label>
                     <input type="text" id="uniprot_id" name="uniprot_id" value="<?php echo htmlspecialchars($_GET['uniprot_id'] ?? ''); ?>"required>
@@ -105,29 +105,32 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                 </form>
             </div>
             <?php
+                // checks if uniprot id is searched
                 if (isset($_GET["uniprot_id"])) {
                     $uniprot_id = $_GET['uniprot_id'];
 
                     try {
-                        // Connect to MySQL database
+                        // connect to database
                         $pdo = new PDO("mysql:host={$hostname};dbname={$database}", $username, $password);
                         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                        // Prepare and execute the SQL query
+                        // prepare and execute the SQL query
                         $stmt = $pdo->prepare("SELECT ID, pdb_id, chains FROM processed_files_log WHERE ID = :uniprot_id");
                         $stmt->execute(['uniprot_id' => $uniprot_id]);
                         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
+                        // if result is found, get relevant UniProt ID information from database
                         if ($result) {
                             $pdb_id = $result['pdb_id'];
                             $chains = $result['chains'];
                             $uniprot_id = $result['ID'];
+                            // establish file paths to find PDB files
                             $pdb_dir = "./pyRBDome_Notebooks/analysed_pdbs/{$uniprot_id}/prediction_results/" ;
                             $domain_dir = "./pyRBDome_Notebooks/analysed_pdbs/{$uniprot_id}/filtered_pdb_files/";
                             
                             $loadScriptPredictions = "load '{$pdb_dir}{$pdb_id}_{$chains}_model_predictions.pdb'; ";
-
             
+                            // menu bar for different 3D structures
                             echo "<div class='column column-63'>
                                     <div class='buttonsContainer'>
                                         <div class='row rowButtons2'><p ><i>Different 3D protein structures can also be viewed by toggling between the options below.</i></p></div>
@@ -139,9 +142,11 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class='container jmol-container' id='Jmol2'>
+                        </div>";
+                        
+                        // Jmol container for XGBoost model prediction structure
+                        // include spacefill options for selection
+                        echo "<div class='container jmol-container' id='Jmol2'>
                             <div class='row'>
                                 <div class='column column-40'>
                                     <h4>RNA-Binding Prediction Structure of " . $uniprot_id . "</h4>     
@@ -160,9 +165,11 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                 <div id='JmolDiv2' class='column column-60'></div>
                             </div>
                         <br>
-                        </div>
-                    
-                        <div class='container jmol-container' id='Jmol0'>
+                        </div>";
+
+                        // Jmol container for protein backbone structure
+                        // include different visualisation options for selection
+                        echo "<div class='container jmol-container' id='Jmol0'>
                             <div class='row'>
                                 <div class='column column-40'>
                                     <h4>Protein Backbone Structure of " . $uniprot_id . "</h4>
@@ -203,12 +210,14 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                 </div>
                                 <div id='JmolDiv0' class='column column-60'></div>
                             </div>
-                        </div>
-                        <div class='container jmol-container' id='Jmol1'>
+                        </div>";
+
+                        // Jmol container for strands protein structure
+                        echo "<div class='container jmol-container' id='Jmol1'>
                             <div class='row'>
                                 <div class='column column-40'>
                                     <h4>Strands Structure of " . $uniprot_id . "</h4>
-
+                                    <p>Strands illustrate the protein backbone as a series of thin lines. 'Count' refers to the number of displayed lines in the structure. The 'structure' colour scheme illustrates the secondary structure of the protein, assigning a pink colour to alpha helices and orange to beta sheets. The 'amino' colour scheme assigns different colours based on the chemical properties of the amino acids.</p>
                                     <b>Count:</b><input type='radio' id='strandCount_1' name='strandCount' value='strand_1' style='width:40px' onChange='toggleStrandCount()'>1
                                     <input type='radio' id='strandCount_5' name='strandCount' value='strand_5' style='width:40px' onChange='toggleStrandCount()'>5
                                     <input type='radio' id='strandCount_11' name='strandCount' value='strand_11' style='width:40px' onChange='toggleStrandCount()' checked>11
@@ -225,7 +234,8 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                 <div id='JmolDiv1' class='column column-60'></div>
                             </div>
                         </div>";
-
+                        
+                        // initialise jmol applets for all jmol containers
                         echo "<script type=\"text/javascript\">
                             $(document).ready(function(){
                                 var loadScriptPredictions = `" . $loadScriptPredictions . "`;
@@ -283,9 +293,10 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                     }
                                 };
                                 $('#JmolDiv2').html(Jmol.getAppletHtml('jmolApplet2', JmolInfo2));
-                            });
+                            });";
 
-                            document.getElementById('downloadButton').addEventListener('click', function() {
+                            // download button for all relevant PDB files fot the UniProt ID
+                            echo "document.getElementById('downloadButton').addEventListener('click', function() {
                                 const files = [
                                     '" . $pdb_dir . $pdb_id . "_" . $chains . "_aaRNA.pdb',
                                     '" . $pdb_dir . $pdb_id . "_" . $chains . "_PST_PRNA.pdb',
@@ -322,12 +333,15 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         </div>
     </div>
 
-<?php include 'footer_pyrbdome.php'; ?>
+    <!-- Include footer bar at bottom of the page -->
+    <?php include 'footer_pyrbdome.php'; ?>
 
 </body>
 
 <script>
-
+    
+    // loads jmol container which is selected by user
+    // loads XGBoost model predictions structure by default
     document.addEventListener('DOMContentLoaded', function() {
         // Get all buttons and containers
         var buttons = document.querySelectorAll('.jmol-button');
@@ -368,6 +382,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         });
     });
 
+    // executes jmol commands for selected spacefill option
     function toggleSpacefill() {
         const spacefill100 = document.getElementById('spacefill100').checked;
         const spacefill50 = document.getElementById('spacefill50').checked;
@@ -382,6 +397,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected wireframe option
     function toggleWireframe() {
         const wireframeOn = document.getElementById('wireframe').checked;
         if (wireframeOn) {
@@ -391,6 +407,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected amino acid option
     function toggleShowAminoAcids() {
         const showAminoAcidsOn = document.getElementById('showAminoAcids').checked;
         if (showAminoAcidsOn) {
@@ -400,6 +417,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected Show Atoms option
     function toggleShowAtoms() {
         const showAtomsOn = document.getElementById('showAtoms').checked;
         if (showAtomsOn) {
@@ -409,6 +427,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected backbone thickness option
     function toggleBackbone() {
         const backbone0_6 = document.getElementById('backbone0_6').checked;
         const backbone0_3 = document.getElementById('backbone0_3').checked;
@@ -423,6 +442,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected backbone option
     function toggleBackboneColour() {
         const backboneStructure = document.getElementById('backboneStructure').checked;
         const backboneGreen = document.getElementById('backboneGreen').checked;
@@ -437,6 +457,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected trace thickness option
     function toggleTrace() {
         const traceStructure = document.getElementById('traceStructure').checked;
         const trace0_8 = document.getElementById('trace0_8').checked;
@@ -454,6 +475,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected trace colour option
     function toggleTraceColour() {
         const traceColourStructure = document.getElementById('traceColourStructure').checked;
         const traceColourOlive = document.getElementById('traceColourOlive').checked;
@@ -468,6 +490,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected strand count option
     function toggleStrandCount() {
         const strandCount_1 = document.getElementById('strandCount_1').checked;
         const strandCount_5 = document.getElementById('strandCount_5').checked;
@@ -485,6 +508,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         }
     }
 
+    // executes jmol commands for selected strand colour option
     function toggleStrandColour() {
         const strandColourStructure = document.getElementById('strandColourStructure').checked;
         const strandColourAmino = document.getElementById('strandColourAmino').checked;

@@ -25,44 +25,33 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
     <title>Search UniProt ID</title>
 
     <style>
-
         .search-column {
             flex: 1;
             margin-right: 20px;
         }
-
         .filters-column {
             flex: 2;
             display: flex;
             flex-direction: column;
         }
-
         .filter-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 3px;
+            margin-bottom: 0px;
         }
-
         .filter-row input {
             flex: 1;
-            margin-left: 20px;
+            margin-left: 10px;
         }
-
         .filter-row label {
             flex: 0.5;
             font-size: 15px;
-        }
-        .column-stats {
-            margin-left: 50px;
-            margin-top: 5px;
+            margin-left: 0px;
         }
     </style>
 
-
 </head>
 <body>
-    <!-- build layout of website using bootstrap CSS -->
-
     <div class='container'>
         <br>
         <div class="row">
@@ -74,9 +63,9 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
     </div>
     <div class="container"> 
         <div class='row'> 
-            <div class="column column-33">
+            <div class="column column-25">
+                <!-- form for UniProt ID or Organism search -->
                 <form action="filter_pyrbdome.php" method="GET">
-
                     <input type="hidden" id="prediction_min_hidden" name="prediction_min" value="<?php echo htmlspecialchars($_GET['prediction_min'] ?? ''); ?>">
                     <input type="hidden" id="prediction_max_hidden" name="prediction_max" value="<?php echo htmlspecialchars($_GET['prediction_max'] ?? ''); ?>">
 
@@ -108,36 +97,40 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                     
                     <button type="submit">Search</button>
                 </form>
+            </div>
+            <div class='column column-65 column-offset-10'>
+
+                <!-- form for prediction scores filters -->
                 <form action="filter_pyrbdome.php" method="GET">
                     <input type="hidden" id="uniprot_search_hidden" name="uniprot_search" value="<?php echo htmlspecialchars($_GET['uniprot_search'] ?? ''); ?>">
                     <input type="hidden" id="organism_search" name="organism_search" value="<?php echo htmlspecialchars($_GET['organism_search'] ?? ''); ?>">
 
                     <div class="filter-row">
-                        <label for="prediction_min">XGBoost:<font color='#FFFFFF'>XXXX</font></label>
+                        <label for="prediction_min">XGBoost:</label>
                         <input type="text" id="prediction_min" name="prediction_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['prediction_min'] ?? ''); ?>">
                         <input type="text" id="prediction_max" name="prediction_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['prediction_max'] ?? ''); ?>">
                     </div>
                     <div class="filter-row">
-                        <label for="aarna_min">aaRNA:<font color='#FFFFFF'>XXXXX</font></label>
+                        <label for="aarna_min">aaRNA:</label>
                         <input type="text" id="aarna_min" name="aarna_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['aarna_min'] ?? ''); ?>">
                         <input type="text" id="aarna_max" name="aarna_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['aarna_max'] ?? ''); ?>">
                     </div>
 
                     <div class="filter-row">
-                        <label for="pst_prna_min">PST<font color='#FFFFFF'>.i</font>PRNA:<font color='#FFFFFF'>XX</font></label>
+                        <label for="pst_prna_min">PST-PRNA:</label>
                         <input type="text" id="pst_prna_min" name="pst_prna_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['pst_prna_min'] ?? ''); ?>">
                         <input type="text" id="pst_prna_max" name="pst_prna_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['pst_prna_max'] ?? ''); ?>">
                     </div>
 
                     <!-- Add more filter rows as needed -->
                     <div class="filter-row">
-                        <label for="bindup_min">BindUP:<font color='#FFFFFF'>XXXXX</font></label>
+                        <label for="bindup_min">BindUP:</label>
                         <input type="text" id="bindup_min" name="bindup_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['bindup_min'] ?? ''); ?>">
                         <input type="text" id="bindup_max" name="bindup_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['bindup_max'] ?? ''); ?>">
                     </div>
 
                     <div class="filter-row">
-                        <label for="ftmap_min">FTMap:<font color='#FFFFFF'>XXXXX.</font></label>
+                        <label for="ftmap_min">FTMap:</label>
                         <input type="text" id="ftmap_min" name="ftmap_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['ftmap_min'] ?? ''); ?>">
                         <input type="text" id="ftmap_max" name="ftmap_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['ftmap_max'] ?? ''); ?>">
                     </div>
@@ -149,97 +142,18 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                     </div>
 
                     <div class="filter-row">
-                        <label for="disordpbind_min">DisoRDPbind:<font color='#FFFFFF'>X</font></label>
+                        <label for="disordpbind_min">DisoRDPbind:</label>
                         <input type="text" id="disordpbind_min" name="disordpbind_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['disordpbind_min'] ?? ''); ?>">
                         <input type="text" id="disordpbind_max" name="disordpbind_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['disordpbind_max'] ?? ''); ?>">
                     </div>
 
                     <div class="filter-row">
-                        <label for="hydra_min">HydRa:<font color='#FFFFFF'>XXXXX.</font></label>
+                        <label for="hydra_min">HydRa:</label>
                         <input type="text" id="hydra_min" name="hydra_min" placeholder="Min" value="<?php echo htmlspecialchars($_GET['hydra_min'] ?? ''); ?>">
                         <input type="text" id="hydra_max" name="hydra_max" placeholder="Max" value="<?php echo htmlspecialchars($_GET['hydra_max'] ?? ''); ?>">
                     </div>
-
                     <button type="submit">Filter Results</button>
                 </form>
-            </div>
-            <div class='column-stats'>
-                <h5><b>Database Statistics</b></h5>
-                <?php
-                    try {
-                        // connect to mysql database using credentials stored in login.php
-                        $pdo = new PDO("mysql:host=$hostname;dbname=$database", $username, $password);
-                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        
-                        // construct mysql query based on filter values and prepare query to avoid SQL injection
-                        $stmt = $pdo->prepare("SELECT * FROM processed_files_log");
-                        $stmt->execute();
-                        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                        $no_uniprot_id = $stmt->rowCount();
-
-                        if ($result) {
-                            echo "<p>No. available UniProt IDs: <b>" . $no_uniprot_id . "</b></p>";
-                        } else {
-                        echo "<p>No UniProt IDs found.</p>";
-                        }
-
-                        $stmt2 = $pdo->prepare("SELECT COUNT(DISTINCT ID) AS unique_id_count FROM All_combined_results WHERE predictions >= 0.9");
-                        $stmt2->execute();
-                        
-                        // Fetch the result
-                        $result2 = $stmt2->fetch(PDO::FETCH_ASSOC);
-                        $no_uniprot_id_0_9 = $result2['unique_id_count'];
-                        
-                        if ($result2) {
-                            echo "<p>No. UniProt IDs with RNA-binding amino acid probabilities > 0.9: <b>" . $no_uniprot_id_0_9 . "</b></p>";
-                        } else {
-                        echo "<p>No UniProt IDs found with RNA-binding probabilities > 0.9.</p>";
-                        }
-
-                        $stmt3 = $pdo->prepare("SELECT COUNT(DISTINCT ID) AS unique_id_count FROM All_combined_results WHERE predictions >= 0.95");
-                        $stmt3->execute();
-                        
-                        // Fetch the result
-                        $result3 = $stmt3->fetch(PDO::FETCH_ASSOC);
-                        $no_uniprot_id_0_95 = $result3['unique_id_count'];
-
-                        if ($result3) {
-                            echo "<p>No. UniProt IDs with RNA-binding amino acid probabilities > 0.95: <b>" . $no_uniprot_id_0_95 . "</b></p>";
-                        } else {
-                        echo "<p>No UniProt IDs found with RNA-binding probabilities > 0.9.</p>";
-                        }
-
-                        $stmt4 = $pdo->prepare("SELECT COUNT(DISTINCT ID) AS unique_id_count FROM All_combined_results WHERE predictions >= 0.98");
-                        $stmt4->execute();
-                        
-                        // Fetch the result
-                        $result4 = $stmt4->fetch(PDO::FETCH_ASSOC);
-                        $no_uniprot_id_0_98 = $result4['unique_id_count'];
-
-                        if ($result4) {
-                            echo "<p>No. UniProt IDs with RNA-binding amino acid probabilities > 0.98:<b> " . $no_uniprot_id_0_98 . "</b></p>";
-                        } else {
-                        echo "<p>No UniProt IDs found with RNA-binding probabilities > 0.98.</p>";
-                        }
-
-                        $stmt5 = $pdo->prepare("SELECT COUNT(DISTINCT ID) AS unique_id_count FROM All_combined_results WHERE predictions >= 0.99");
-                        $stmt5->execute();
-                        
-                        // Fetch the result
-                        $result5 = $stmt5->fetch(PDO::FETCH_ASSOC);
-                        $no_uniprot_id_0_99 = $result5['unique_id_count'];
-
-                        if ($result5) {
-                            echo "<p>No. UniProt IDs with RNA-binding amino acid probabilities > 0.99: <b>" . $no_uniprot_id_0_99 . "</b></p>";
-                        } else {
-                        echo "<p>No UniProt IDs found with RNA-binding probabilities > 0.99.</p>";
-                        }
-                        
-                    } catch (PDOException $e) {
-                        echo "Error: " . $e->getMessage();
-                    }
-
-                ?>
             </div>
         </div>
     </div>
@@ -258,44 +172,64 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                 $query = "SELECT * FROM All_combined_results a LEFT JOIN protein_info p ON a.ID = p.uniprot_id WHERE 1=1";
                 $params = [];
 
+                // checks if a UniProt ID is submitted and uses value in SQL query
                 if (!empty($_GET['uniprot_search'])) {
                     $query .= " AND ID = :uniprot_search";
                     $params[':uniprot_search'] = $_GET['uniprot_search'];
                 }
+
+                // checks if an Organism is submitted and uses value in SQL query
                 if (!empty($_GET['organism_search'])) {                    
                     $query .= " AND organism LIKE :organism_search";
                     $organism = $_GET['organism_search'];
+                    // retrieves all organisms that are contain the searched string value
                     $organism = '%' . $organism . '%';
                     $params[':organism_search'] = $organism;
                 }
+
+                // checks if a value for min XGBoost prediction score is submitted and uses value in SQL query
                 if (!empty($_GET['prediction_min'])) {
                     $query .= " AND predictions >= :prediction_min";
                     $params[':prediction_min'] = $_GET['prediction_min'];
                 }
+
+                // checks if a value for max XGBoost prediction socre is submitted and uses value in SQL query
                 if (!empty($_GET['prediction_max'])) {
                     $query .= " AND predictions <= :prediction_max";
                     $params[':prediction_max'] = $_GET['prediction_max'];
                 }
+
+                // checks if a value for min aaRNA socre is submitted and uses value in SQL query
                 if (!empty($_GET['aarna_min'])) {
                     $query .= " AND aaRNA >= :aarna_min";
                     $params[':aarna_min'] = $_GET['aarna_min'];
                 }
+
+                // checks if a value for max aaRNA socre is submitted and uses value in SQL query
                 if (!empty($_GET['aarna_max'])) {
                     $query .= " AND aaRNA <= :aarna_max";
                     $params[':aarna_max'] = $_GET['aarna_max'];
                 }
+
+                // checks if a value for min PST PRNA socre is submitted and uses value in SQL query
                 if (!empty($_GET['pst_prna_min'])) {
                     $query .= " AND PST_PRNA >= :pst_prna_min";
                     $params[':pst_prna_min'] = $_GET['pst_prna_min'];
                 }
+
+                // checks if a value for max PST PRNA socre is submitted and uses value in SQL query
                 if (!empty($_GET['pst_prna_max'])) {
                     $query .= " AND PST_PRNA <= :pst_prna_max";
                     $params[':pst_prna_max'] = $_GET['pst_prna_max'];
                 }
+
+                // checks if a value for min BindUP socre is submitted and uses value in SQL query
                 if (!empty($_GET['bindup_min'])) {
                     $query .= " AND BindUP >= :bindup_min";
                     $params[':bindup_min'] = $_GET['bindup_min'];
                 }
+
+                // checks if a value for max BindUP socre is submitted and uses value in SQL query
                 if (!empty($_GET['bindup_max'])) {
                     $query .= " AND BindUP <= :bindup_max";
                     $params[':bindup_max'] = $_GET['bindup_max'];

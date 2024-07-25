@@ -59,7 +59,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                         echo "<h4>Prediction Plot Guide:</h4>";
                         echo "<p>The score bar shows the RNA-binding probability for each amino acid residue. These prediction scores are generated from the XGBoost model using all the prediction results from individual predictor algorithms.</p>";
                         echo "<p>The successive rows may display the probabilities retrieved from individual predictors including aaRNA, PST PRNA, BindUP, FTMap, RNABindRPlus, DisoRDPbind and HydRa. </p>";
-                        echo "<p>Cross-linked amino acids may be displayed beneath the individual predictors, and domains identified in the sequence are outlined in ovals.</p>";
+                        echo "<p>Cross-linked amino acids may be displayed beneath the individual predictors, cross-linked peptides are highlighted in yellow, and domains identified in the sequence are outlined in ovals.</p>";
                         echo "<p><i>Note that prediction plots for some proteins may not include all individual predictor scores or display the cross-linked amino acids.</i></p>";
                         echo "<p><a href=\"https://www.uniprot.org/uniprotkb/{$uniprot_id}/entry\">More information about {$uniprot_id}</a></p>";
                     }

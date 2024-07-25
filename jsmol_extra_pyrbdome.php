@@ -58,17 +58,24 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
             width: 750px;
             height: 650px;
         }
+        #JmolDivRNABindRPlus {
+            width: 750px;
+            height: 650px;
+        }
+        #JmolDivFTMap {
+            width: 750px;
+            height: 650px;
+        }
         .buttons {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-left: 20px;
         }
         .button-outline {
             flex-direction: column;
             justify-content: center;
-            margin-left: 11px;
             display: flex;
+            margin: 0 10px;
         }
         .buttons input {
             margin-bottom: 5px;
@@ -99,6 +106,17 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
         #JmolHydRa {
             padding: 10px;
             margin-top: 10px;
+        }
+        #JmolRNABindRPlus {
+            padding: 10px;
+            margin-top: 10px;
+        }
+        #JmolFTMap {
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .row-buttons {
+            justify-content: center;
         }
 
     </style>
@@ -143,16 +161,19 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                         $loadScriptFTMap = "load '{$pdb_dir}{$pdb_id}_{$chains}_FTMap_distances.pdb'; ";
                         $loadScriptDisoRDPbind = "load '{$pdb_dir}{$pdb_id}_{$chains}_DisoRDPbind.pdb'; ";
                         $loadScriptHydRa = "load '{$pdb_dir}{$pdb_id}_{$chains}_HydRa.pdb'; ";
+                        $loadScriptRNABindRPlus = "load '{$pdb_dir}{$pdb_id}_{$chains}_RNABindRPlus.pdb'; ";
 
                         echo "<p><a href=\"jsmol_pyrbdome.php?uniprot_id=" . $uniprot_id . "\">Back to UniProt Search</a></p>
                             </div>
                             <div class='column column-50'>
-                                <div class='row'>
+                                <div class='row row-buttons'>
                                     <button class='jmol-button button-outline' data-target='JmolaaRNA'>aaRNA</button>
                                     <button class='jmol-button button-outline' data-target='JmolPST_PRNA'>PST PRNA</button>
                                     <button class='jmol-button button-outline' data-target='JmolBindUP'>BindUP</button>
                                     <button class='jmol-button button-outline' data-target='JmolDisoRDPbind'>DisoRDPbind</button>
                                     <button class='jmol-button button-outline' data-target='JmolHydRa'>HydRa</button>
+                                    <button class='jmol-button button-outline' data-target='JmolRNABindRPlus'>RNABindRPlus</button>
+                                    <button class='jmol-button button-outline' data-target='JmolFTMap'>FTMap</button>
                                 </div>
                             </div>
                         </div>
@@ -161,8 +182,10 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                             <div class='row'>
                                 <div id='JmolDivaaRNA' class='column column-60'></div>
                                 <div class='column column-40'>
-                                    <h4>aaRNA</h4>
-                                    <p>Brief description here</p>
+                                    <h4>aaRNA RNA-Binding Prediction Structure</h4>
+                                    <p>aaRNA is an algorithm which identifies RNA-binding residues by incorporating features including hidden Markov model-based evolutionary conservation, surface deformations based on the Laplacian norm formalism, and relative solvent accessibility partitioned into backbone and side chain contributions (<a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4150784/'>Li <i>et al</i>, 2014</a>).  </p>
+                                    <p>The binding probabilities are displayed in the b-factor column in the aaRNA PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
                                 </div>
                             </div>
                         </div>
@@ -170,8 +193,10 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                             <div class='row'>
                                 <div id='JmolDivPST_PRNA' class='column column-60'></div>
                                 <div class='column column-40'>
-                                    <h4>PST PRNA</h4>
-                                    <p>Brief description here</p>
+                                    <h4>PST-PRNA RNA-Binding Prediction Structure</h4>
+                                    <p>The PST-PRNA algorithm combines topographic representation of the protein surface and deep learning approaches. Topographic representation of the protein surface may reveal distinct protein properties, such as hydrophobicity or electrostatic potential, facilitating insight into protein structure and function. Deep learning methods are used to identify patterns in protein surface topographic images to unveil protein RNA-binding propensity on the residue level (<a href='https://pubmed.ncbi.nlm.nih.gov/35150250/'>Li <i>et al</i>, 2022</a>). </p>
+                                    <p>The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
                                 </div>
                             </div>
                         </div>
@@ -179,8 +204,32 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                             <div class='row'>
                                 <div id='JmolDivBindUP' class='column column-60'></div>
                                 <div class='column column-40'>
-                                    <h4>BindUP</h4>
-                                    <p>Brief description here</p>
+                                    <h4>BindUP RNA-Binding Prediction Structure</h4>
+                                    <p>BindUP utilises the NAbind algorithm to detect nucleic acid-binding proteins based on electrostatic patches on the protein surface. It has demonstrated efficiency in identifying novel nucleic acid-binding residues of non-canonical RNA-binding proteins (<a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4987955/'>Paz<i> et al</i>, 2016</a>). </p>
+                                    <p>The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='container jmol-container' id='JmolRNABindRPlus'>
+                            <div class='row'>
+                                <div id='JmolDivRNABindRPlus' class='column column-60'></div>
+                                <div class='column column-40'>
+                                    <h4>RNBindRPlus RNA-Binding Prediction Structure</h4>
+                                    <p>RNABindRPlus combines RNA-binding predictions from two distinct methods using logistics regression to predict RNA-binding residues. It combines predictions from  a support vector machine classifier trained on protein sequence information and predictions from another predictor algorithm, HomPRIP. This algorithm employs a sequence homology-based approach to predict RNA-binding residues (<a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4028231/'>Walia <i>et al</i>, 2014</a>).</p>
+                                    <p>The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='container jmol-container' id='JmolFTMap'>
+                            <div class='row'>
+                                <div id='JmolDivFTMap' class='column column-60'></div>
+                                <div class='column column-40'>
+                                    <h4>FTMap RNA-Binding Prediction Structure</h4>
+                                    <p>FTMap detects ligand-binding regions in proteins by globally docking small organic probes onto the protein structure. As small molecule-binding regions sometimes overlap with RNA-binding sites, FTMap may also be used to detect RNA-binding protein (<a href='https://pubmed.ncbi.nlm.nih.gov/19176554/'>Brenke <i>et al</i>, 2009</a>). </p>
+                                    <p>The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
                                 </div>
                             </div>
                         </div>
@@ -188,8 +237,10 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                             <div class='row'>
                                 <div id='JmolDivDisoRDPbind' class='column column-60'></div>
                                 <div class='column column-40'>
-                                    <h4>DisoRDPbind</h4>
-                                    <p>Brief description here</p>
+                                    <h4>DisoRDPbind RNA-Binding Prediction Structure</h4>
+                                    <p>DisoRDPbind detects nucleic acid and protein-binding residues in intrinsically disordered regions within protein sequences. It detects binding regions based on protein sequence complexity, amino acid physiochemical properties, putative secondary structure and disorder and sequence alignment (<a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4605291/'>Peng <i>et al</i>, 2015</a>). </p>
+                                    <p>The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
                                 </div>
                             </div>
                         </div>
@@ -197,8 +248,10 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                             <div class='row'>
                                 <div id='JmolDivHydRa' class='column column-60'></div>
                                 <div class='column column-40'>
-                                    <h4>HydRa</h4>
-                                    <p>Brief description here</p>
+                                    <h4>HydRa RNA-Binding Prediction Structure</h4>
+                                    <p>HydRa identifies protein RNA-binding residues based on intermolecular protein interactions and protein sequence patterns, alongside several deep learning methods. These methods include support vector machine, convolutional neural networks and transformer-based protein language models (<a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11098078/'>Jin<i> et al</i>, 2023</a>). </p>
+                                    <p>The binding probabilities are displayed in the b-factor column in the PDB file, where the probability values range from 0 (0% probability) to 100 (100% probability). The 'temperature' colour spectrum of the 3D structure represents the range of RNA-binding probabilities of the amino acids (red: high probability; white: medium probability; blue: low probability).</p>                         
+                                    <p style='font-size: 14px; color: #878787;'><i>If the structure does not load, click inside the structure box.</i></p>
                                 </div>
                             </div>
                         </div>";
@@ -223,6 +276,45 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                                     }
                                 };
                                 $('#JmolDivaaRNA').html(Jmol.getAppletHtml('jmolAppletaaRNA', JmolInfoaaRNA));
+
+                                loadScriptRNABindRPlus = `" . $loadScriptRNABindRPlus . "`;
+                                var JmolInfoRNABindRPlus = {
+                                    width: '100%',
+                                    height: '100%',
+                                    color: '#f8f8f8',
+                                    debug: false,
+                                    disableJ2SLoadMonitor: true,
+                                    disableInitialConsole: true,
+                                    addSelectionOptions: false,
+                                    j2sPath: 'jsmol/j2s',
+                                    serverURL: 'jsmol/php/jsmol.php',
+                                    use: 'html5',
+                                    readyFunction: function(applet) {
+                                        console.log('Jmol is ready');
+                                        Jmol.script(applet, loadScriptRNABindRPlus + '; spacefill; color temperature;');
+                                    }
+                                };
+                                $('#JmolDivRNABindRPlus').html(Jmol.getAppletHtml('jmolAppletRNABindRPlus', JmolInfoRNABindRPlus));
+
+                                loadScriptFTMap = `" . $loadScriptFTMap . "`;
+                                var JmolInfoFTMap = {
+                                    width: '100%',
+                                    height: '100%',
+                                    color: '#f8f8f8',
+                                    debug: false,
+                                    disableJ2SLoadMonitor: true,
+                                    disableInitialConsole: true,
+                                    addSelectionOptions: false,
+                                    j2sPath: 'jsmol/j2s',
+                                    serverURL: 'jsmol/php/jsmol.php',
+                                    use: 'html5',
+                                    readyFunction: function(applet) {
+                                        console.log('Jmol is ready');
+                                        Jmol.script(applet, loadScriptFTMap + '; spacefill; color temperature;');
+                                    }
+                                };
+                                $('#JmolDivFTMap').html(Jmol.getAppletHtml('jmolAppletFTMap', JmolInfoFTMap));
+
 
                                 loadScriptPST_PRNA = `" . $loadScriptPST_PRNA . "`;
                                 var JmolInfoPST_PRNA = {
@@ -302,6 +394,9 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                             });
                         </script>";
 
+                        echo" <div class='container'>       
+                        <p style='text-align: center;'>Using Jmol: Click and drag inside the box to <b>rotate</b> the structure and use the trackpad to <b>zoom</b> in and out. To <b>identify</b> an amino acid, hover over it with the cursor. Calculate the <b>distance</b> between two amino acids by clicking two amino acids of interest.</p>";
+
                     } else {
                         echo "<p>No PDB files found for the given UniProt ID.</p>";
                     }
@@ -310,6 +405,7 @@ include 'menu_pyrbdome.php'; // inlcudes menu bar on top of the page.
                 }
             }
             ?>
+            </div>
         </div>
     </div>
 
