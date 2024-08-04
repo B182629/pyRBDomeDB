@@ -4,7 +4,7 @@
     host: "127.0.0.1"
     username: "root"
     password: ""
-    database_path: "/Users/aliceaakerberg/Sites/pyRBDome_Notebooks/pyRBDome_analyses/pyrbdome_full.db"
+    database_path: "../pyRBDome_Notebooks/pyRBDome_analyses/pyrbdome_full.db"
     database_name: "pyrbdome_new"
     database_table: "available_pdbs" # main table used through N1.1-N3.0
     distance_analyses_log: "distance_analyses_log" # table used to keep track of distance analyses in N5.1-5.6
@@ -12,7 +12,5 @@
     processed_files_log: "processed_files_log" # table used to keep track of processing in N4.0
 
 - output:
-    output_file_path: "/Users/aliceaakerberg/Sites/output_files"
+    output_file_path: "./pyRBDome_sql/output_files"
 
-- Entrez:
-    email: "s2012003@ed.ac.uk"
