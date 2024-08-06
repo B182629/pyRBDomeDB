@@ -84,6 +84,19 @@ If the database schema looks incorrect, individual tables can be modified or the
 
 The transfer_data.ipynb Jupyter Notebook script retrieves pyRBDome results stored in the SQLite database and copies them to the initialised mySQL database. It also retrieves the organism name related to the UniProt ID and stores this information in a mySQL table. Data already existing in the mySQL database will not be duplicated.
 
+
+**Data:**
+
+The data currently stored in the mySQL database are the pyRBDome results generated from the RBS-ID dataset (https://git.ecdf.ed.ac.uk/sgrannem/pyRBDome_Notebooks). Moreover, PDB and PDF files for the same dataset are linked to the pyRBDomeDB website. Therefore, these files are stored in the pyRBDomeDB website directory in the filesystem so they can be easily located and retrieved by PHP webpage scripts. If these data are moved elsewhere, the file paths in `jsmol_pyrbdome.php`, `jsmol_extra_pyrbdome.php` and `sequence_pyrbdome.php` must be modified.
+
+For example, the file paths in jsmol_pyrbdome.php point to the relevant files within the filesystem:
+
+```markdown
+$pdb_dir = "./pyRBDome_Notebooks/analysed_pdbs/{$uniprot_id}/prediction_results/" ;
+$domain_dir = "./pyRBDome_Notebooks/analysed_pdbs/{$uniprot_id}/filtered_pdb_files/";
+$loadScriptPredictions = "load '{$pdb_dir}{$pdb_id}_{$chains}_model_predictions.pdb'; ";
+```
+
 **How it works:**
 
 The script reads the SQLite database, and fetches the names of all tables in the SQLite database. For each database table, a pandas dataframe is created, changing inappropriate column names (i.e. those containing whitespace) to appropriate names and replacing empty values and inf values with values readable by mySQL to avoid errors. For each column in each table, the script automatically checks that the data type of the column matches that of the data being inserted (e.g. mySQL columns with data type `VARCHAR(10)` are inserted with string values containing various characters less than or equal to a length of 10). The script also reads the mySQL table to ensure existing rows are not duplicated during table population.
