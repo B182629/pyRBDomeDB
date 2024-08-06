@@ -112,7 +112,7 @@ JSmol objects requires a separate installation of Jmol. Ensure the pyRBDomeDB gi
 
 **Step 1:** Visit https://jmol.sourceforge.net/download/ and download the Jmol zip file from SourceForge using the direct link.
 
-**Step 2:** Transfer the downloaded Jmol zip file to the preferred location (e.g. local machine desktop) and unzip the file.
+**Step 2:** Transfer the downloaded Jmol zip file to the preferred location (e.g. local machine desktop) and unzip the file. *It is recommended that Jmol version 16.1.25 is used, as the more recent versions do not seem to work.*
 
 **Step 3:** Open the unzipped Jmol folder and unzip the JSmol folder (jsmol.zip).
 
